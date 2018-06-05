@@ -41,7 +41,7 @@ Visual Studio gives the following tools regarding Blazor :
   - load mono.wasm, an implementation of the platform working with Web Assembly (don't ask me more yet, I'm trying to understand it as I learn Blazor), so your code and your dependencies can actually get executed on the brower and interact ith the dom
 
 ## Reference / Links
-- (http://blog.stevensanderson.com/2018/02/06/blazor-intro/)
-- (https://blazor.net)
-- (https://github.com/aspnet/Blazor)
-- (http://www.mono-project.com/news/2017/08/09/hello-webassembly/)
+- http://blog.stevensanderson.com/2018/02/06/blazor-intro/
+- https://blazor.net
+- https://github.com/aspnet/Blazor
+- http://www.mono-project.com/news/2017/08/09/hello-webassembly/
