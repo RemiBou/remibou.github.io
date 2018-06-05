@@ -1,5 +1,6 @@
 ## What is Blazor ?
 (this post is based on Blazor 0.3)
+
 To make it easy : blazor is just like vuejs / angular / reactjs ... but you code in C# with the Razor syntax :)
 
 ## Main notions
