@@ -10,18 +10,18 @@ Blazor is articulated around the followings notions :
   - external reference : the js / css files you need from external providers (like jqueryui or toastr)
   - a root tag on which the pages will be rendered
   - a script tag for loading the blazor script
-- App.cshtml : temporary file for configuring your app (by default only the Router scanning is here) (My App.cshtml)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/App.cshtml]
+- App.cshtml : temporary file for configuring your app (by default only the Router scanning is here) [My App.cshtml](https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/App.cshtml)
 - component : a razor template and it's c# code that will manage a part of the page.
 - page : just like a component but it will be created on the application body when the user loads an url on its browser
-- interop functions : link you can create between a js function and a c# function (defined in this 2 files (C# side)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Services/JsInterop.cs] and (JS side)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/wwwroot/index.html]
-- Entry point (My File)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Program.cs] just like the program.cs in asp.net core app you define :
+- interop functions : link you can create between a js function and a c# function (defined in this 2 files [C# side](https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Services/JsInterop.cs) and [JS side](https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/wwwroot/index.html)
+- Entry point [My File](https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Program.cs) just like the program.cs in asp.net core app you define :
   - Dependency injection configuration
   - Framework specific settings (here I just set the name of the tag on the root App Root that'll be replace by the page content).
 
-You can view all these notions on my TOSS project (Here)[https://github.com/RemiBou/Toss.Blazor]
+You can view all these notions on my TOSS project [Here](https://github.com/RemiBou/Toss.Blazor)
 
 ## Visual Studio integration
-You need at least Visual Studio 15.7 and the Blazor Language Service (here)[https://go.microsoft.com/fwlink/?linkid=870389].
+You need at least Visual Studio 15.7 and the Blazor Language Service [here](https://go.microsoft.com/fwlink/?linkid=870389).
 Visual Studio gives the following tools regarding Blazor :
 - 2 project templates
 - code coloration on pages/components
@@ -41,7 +41,7 @@ Visual Studio gives the following tools regarding Blazor :
   - load mono.wasm, an implementation of the platform working with Web Assembly (don't ask me more yet, I'm trying to understand it as I learn Blazor), so your code and your dependencies can actually get executed on the brower and interact ith the dom
 
 ## Reference / Links
-[http://blog.stevensanderson.com/2018/02/06/blazor-intro/]
-[https://blazor.net]
-[https://github.com/aspnet/Blazor]
+(http://blog.stevensanderson.com/2018/02/06/blazor-intro/)
+(https://blazor.net)
+(https://github.com/aspnet/Blazor)
 [http://www.mono-project.com/news/2017/08/09/hello-webassembly/]
