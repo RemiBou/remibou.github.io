@@ -8,9 +8,9 @@ Blazor is articulated around the followings notions :
   - html minimal tags (html/header/body)
   - external reference : the js / css files you need from external providers (like jqueryui or toastr)
   - a root tag on which the pages will be rendered
-  - a tag for hsting the blazor script references
+  - a script tag for loading the blazor script
 - App.cshtml : temporary file for configuring your app (by default only the Router scanning is here) (My App.cshtml)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/App.cshtml]
-- component : a razor template and it's c# code that will generate a bloc html.
+- component : a razor template and it's c# code that will manage a part of the page.
 - page : just like a component but it will be created on the application body when the user loads an url on its browser
 - interop functions : link you can create between a js function and a c# function (defined in this 2 files (C# side)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Services/JsInterop.cs] and (JS side)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/wwwroot/index.html]
 - Entry point (My File)[https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Client/Program.cs] just like the program.cs in asp.net core app you define :
@@ -29,13 +29,13 @@ Visual Studio gives the following tools regarding Blazor :
 - with the already existing IIS Express integration you can host your project locally and test it on your dev computer.
 
 ## How it works ? (or how I understand it works)
-- When you build, all the components / pages are translated to pure C# classes (you can find them on your project obj folder)
-- All these classes have interaction with Microsoft.AspNetCore.Blazor.RenderTree.RenderTreeBuilder which is and html tag writer
-- When a changes occurs on the view modelof the component or page, the  BuildRenderTree is called and then the content is updated
+- When you build, all the components / pages are translated to pure C# classes (you can find them on your project /obj folder)
+  - All these classes have interaction with Microsoft.AspNetCore.Blazor.RenderTree.RenderTreeBuilder which is and html tag writer
+  - When changes occurs on the view model of the component or page, the  BuildRenderTree is called and then the content is updated
 - All these clases are the compiled for targeting .netstandard 2.0
 - When the browser loads index.html it loads blazor.js a library that will 
-  - load on the browser, your project entry point
-  - load it's dependencies, all targeting .netstandard 2.0
+  - load your project entry point
+  - load it's dependencies (all targeting .netstandard 2.0)
   - init web assembly if the browser doesn't support it
   - load mono.wasm, an implementation of the platform working with Web Assembly (don't ask me more yet, I'm trying to understand it as I learn Blazor), so your code and your dependencies can actually get executed on the brower and interact ith the dom
 
