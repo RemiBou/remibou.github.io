@@ -13,8 +13,6 @@ It's available here (https://simpleprogrammer.com/blog-course), it follows the f
 thursday with instruction / advice. It's not revolutionnary but it's a motivation bump and some advice are really good (no spoiler).
 
 And If you get through this you get this beautiful badge
-​<a href=""><img src="></a>
-
 
 [![Simple programmer Free Blogging Course](http://simpleprogrammer.com/wp-content/uploads/2015/04/badge.png)](https://simpleprogrammer.com/lp/create-your-blog-1/)
 
