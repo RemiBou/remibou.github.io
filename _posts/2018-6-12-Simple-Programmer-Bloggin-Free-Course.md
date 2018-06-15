@@ -1,5 +1,3 @@
-## About Simple Programmer
-
 [Simple Programmer](https://simpleprogrammer.com/) is a blog / online course website for developers, it's mainly maintained by John Sonmez. While it began as a technical blog it's not more oriented on soft skills and career advise. 
 I think I began to read this blog around 2009-2010 and I've been reading regularly it's post since. Sometimes it's not really interesting (like John thoughts when he didn't have enough workout during the week or how you can negociate 
 your pay for a job in the US) but most of the time it's a good read and easy to understand.
@@ -15,7 +13,9 @@ It's available here (https://simpleprogrammer.com/blog-course), it follows the f
 thursday with instruction / advice. It's not revolutionnary but it's a motivation bump and some advice are really good (no spoiler).
 
 And If you get through this you get this beautiful badge
+​<a href=""><img src="></a>
 
 
+[![Simple programmer Free Blogging Course](http://simpleprogrammer.com/wp-content/uploads/2015/04/badge.png)](https://simpleprogrammer.com/lp/create-your-blog-1/)
 
-
+You can find the full list of the blogs I follow here (https://github.com/RemiBou/remibou.github.io/blob/master/feeds.opml)
