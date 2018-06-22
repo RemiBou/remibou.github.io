@@ -40,8 +40,28 @@ And you configure MediatR like this in your Startup.ConfigureService
 services.AddMediatR(typeof(Startup));
 ```
 I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
-You can view my code here :
-### Issuing Command / Query
+You can view my code here : [https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Server/Startup.cs]. I also add a reference to the shared assembly between my client and server where I got the definitions of my commands and queries.
 
+### Issuing Command / Query
+Once everything is bootstrapped you can create your first message so I created one for login in the user. This kind of cases are weird because I don't update the database but in my mind it's still the global state of the system. So here is my command, quite simple
+
+```C#
+public class LoginCommand : IRequest<LoginCommandResult>
+    {
+        [Required]
+        public string UserName { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
+    }
+```
+- it's a C# object which implements a generic "marker interface" IRequest (there is no method to implement) 
+- I have DataAnnotations validation attribute for validating this message
+- The generic argument of IRequest is the type of the result returned by the handler. Here it's a command with a result, simply because the user might enter bad login or password. I coul
+### Events
 ### Validation
 ## Conclusion
