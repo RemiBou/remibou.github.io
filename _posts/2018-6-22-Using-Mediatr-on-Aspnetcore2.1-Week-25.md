@@ -11,11 +11,37 @@ This is where all the select occurs. A query is a way to display a part of the s
 In a web application / rpc via http api / rest api the command are launched by a GET. The only exception being for technical reason (request too big). It's a GET so the user is able to get this query result whenever he wants to.
 
 ### Why split this that way :
-- Decoupling : 
+- Decoupling : by splitting your domain in two part where there was one, you can make them much more independant. The read model will always be coupled to the write model, at least when you'll update it, but the write model won't care how you read the data it'll just try to be as coherent as possible and follow the business expert view of it (CQRS is tighly linked to DDD in my point of view).
 - Domain following : it's very important to have a code base as close as possible to what the domain expert think. Domain expert don't think database rows (CRUD), they think actions (command) and end user screens (queries).
-- Performance : if you store both domain in a data store optimised for it, you'll be able to get better performance. For instance you store the write model on a RDMS so you are sure that your system state is coherent and you can store the read model on a NoSQL database (like Redis) because you don't want to execute 150 joins when you want to display some data to the user. The read model is updated everytime a 
+- Performance : if you store both domain in a data store optimised for it, you'll be able to get better performance. For instance you store the write model on a RDMS so you are sure that your system state is coherent and you can store the read model on a NoSQL database (like Redis) because you don't want to execute 150 joins when you want to display some data to the user. The read model is updated everytime something happens on the write model via event so the write model completly ignores what it is supposed to update.
 
-## Jimmy Bogards
+### Difficulties
+When you want to implement CQRS you have a few difficulties, in C# at least :
+- Implementing event aggregation, for updating your read model and chaining commands if needed. The current event implementation on C# is just usefull for client side GUI and cannot be used on a stateless app like a website
+- Decoupling command and query from their handling the boilerplate for linking the command/query to its good handler can be cumbersome. Why decoupling the message (command/query) from the handling ? First they can be defined in different assemblies (you can share the class definition of the queries with your client, not the implementation), second you won't have to inject your services into your message class and third your code will respect the SRP. 
+This is why it's better to use a tool like Mediatr for implementing CQRS.
+
 ## Mediatr
-## Aspnet Core 2.1
+Mediart is a .net open source projet ((GitHub)[https://github.com/jbogard/MediatR],(Nuget)[https://www.nuget.org/packages/MediatR/]) created by (Jimmy Bogard)[https://twitter.com/jbogard]. It's an implementaiton of the Mediator pattern and this pattern was created for decoupling message from handling.
+## Usage
+### Install
+Mediatr is available on nuget for .net standard 2.0 project. You just enter this command on the package manager console
+```
+Install-Package MediatR
+```
+### Wiring with Ioc container
+For linking messages and handling, MediatR neds an IoC container. If like me you think the one included in Asp.Net core 2.1 is quite enough you have to install the package for this container
+```
+Install-Package MediatR.Extensions.Microsoft.DependencyInjection
+```
+(this package as a dependance to the first one so only this one is enough).
+And you configure MediatR like this in your Startup.ConfigureService
+```C#
+services.AddMediatR(typeof(Startup));
+```
+I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
+You can view my code here :
+### Issuing Command / Query
+
+### Validation
 ## Conclusion
