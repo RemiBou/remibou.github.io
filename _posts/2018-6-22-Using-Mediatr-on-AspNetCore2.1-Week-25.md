@@ -66,15 +66,17 @@ public class LoginCommand : IRequest<LoginCommandResult>
 
 For handling this command you need two things. First the mediator instance IMediatr :
 
-```C#
+```cs
 private readonly IMediator _mediator;
 public AccountController(IMediator mediator)
 {
     _mediator = mediator;
 }
 ```
+
 The handling is defined like this
-```C#
+
+```cs
 public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResult>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -110,10 +112,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandRes
     }
 }
 ```
+
 This code is pretty  simple. I just needed to implement "IRequestHandler<LoginCommand, LoginCommandResult>".
 
 Then you call it that way
-```C#
+
+```cs
 [HttpPost]
 [AllowAnonymous]
 public async Task<IActionResult> Login(LoginCommand command)
@@ -134,12 +138,13 @@ public async Task<IActionResult> Login(LoginCommand command)
     return Ok();
 }
 ```
+
 - First line calls the mediator and get the result asynchronously (you could have IO under this so it's better to do everything async)
 - Then I parse the result, most of this code is from the original security template for asp.net. I commented the 2FA part as I didn't implement it yet.
 - I reuse the ModelState for sending the error as it's the format expected by the client (rpc via http) in the event of a bad request (400)
 This is the most complicated code I have on my controller action, most of the time it's just like this :
 
-```C#
+```cs
 var res = await mediator.Send(command);
 if (res.IsSucess)
     return new OkResult();
@@ -151,7 +156,7 @@ So why have a Controller at all ? Mainly because it has a few things to do : rou
 ### Events
 I am using Azure Table for data storage. This service doesn't provide indexing out of the box, so you have to do it yourself. With event I can safely decouple my write model (inserting new element) and my read model (querying element based on some criteria). An event is pretty much like a command but implements INotification and there is no result here as the caller doesn't care about what happens next :
 
-```C#
+```cs
 public class TossPosted : INotification {
     public string TossId{get;set;}
 }
@@ -162,7 +167,7 @@ public class TossPosted : INotification {
 
 Then for handling the event and create the index you implement INotificationHandler like this
 
-```C#
+```cs
 public class TossTagIndexHandler : INotificationHandler<TossPosted> {
     ///missing code : dependency injection, azure table init ...
     public Task Handle(TossPosted notification, CancellationToken cancellationToken) {       
