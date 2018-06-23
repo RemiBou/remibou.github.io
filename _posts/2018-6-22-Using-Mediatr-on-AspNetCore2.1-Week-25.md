@@ -37,7 +37,7 @@ And you configure MediatR like this in your Startup.ConfigureService
 ```cs
 services.AddMediatR(typeof(Startup));
 ```
-I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
+.I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
 
 You can view my code here : [https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Server/Startup.cs]. I also add a reference to the shared assembly between my client (blazor app) and server where I got the definitions of my commands and queries.
 
