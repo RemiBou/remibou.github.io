@@ -20,7 +20,7 @@ In a web application / rpc via http api / rest api the command are launched by a
 ## Mediatr
 If you want to implement CQRS you'll have to do a lot of boilerplate code for wiring messages and their handling or you can use a package that does all this work for you.
 
-Mediart is a .net open source projet ((GitHub)[https://github.com/jbogard/MediatR],(Nuget)[https://www.nuget.org/packages/MediatR/]) created by (Jimmy Bogard)[https://twitter.com/jbogard]. It's an implementation of the Mediator pattern and this pattern was created for decoupling message from handling.
+Mediart is a .net open source projet ([GitHub](https://github.com/jbogard/MediatR),[Nuget](https://www.nuget.org/packages/MediatR/)) created by [Jimmy Bogard](https://twitter.com/jbogard). It's an implementation of the Mediator pattern and this pattern was created for decoupling message from handling.
 ## Usage
 ### Install
 Mediatr is available on nuget for .net standard 2.0 project (it's also available for .net framework projects). You just enter this command on the package manager console
