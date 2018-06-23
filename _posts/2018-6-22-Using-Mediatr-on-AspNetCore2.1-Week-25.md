@@ -192,7 +192,7 @@ You didn't see any command validation here, it's normal I use the new ApiControl
 ## Conclusion
 Mediatr really helped to decouple all my command / query / event handling. It also helped to keep my controller small as it's, in my opnion, one of the biggest problem in an mvc application.
 ## Source
-- (https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
-- (https://github.com/jbogard/MediatR/wiki)
-- (https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-2.1?view=aspnetcore-2.1)
-- (https://martinfowler.com/bliki/CQRS.html)
+- https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/
+- https://github.com/jbogard/MediatR/wiki
+- https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-2.1?view=aspnetcore-2.1
+- https://martinfowler.com/bliki/CQRS.html
