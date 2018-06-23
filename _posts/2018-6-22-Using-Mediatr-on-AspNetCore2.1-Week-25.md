@@ -41,7 +41,7 @@ services.AddMediatR(typeof(Startup));
 
 I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
 
-You can view my code here : [https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Server/Startup.cs]. I also add a reference to the shared assembly between my client (blazor app) and server where I got the definitions of my commands and queries.
+You can view my code here : [Startup.cs](https://github.com/RemiBou/Toss.Blazor/blob/master/Toss/Toss.Server/Startup.cs). I also add a reference to the shared assembly between my client (blazor app) and server where I got the definitions of my commands and queries.
 
 ### Issuing Command / Query
 Once everything is bootstrapped you can create your first message. I created one for login-in the user. This kind of cases are weird because I don't update the database but in my mind it's still the global state of the system, in Mediatr there is not much difference between a command and a query anyway. Here is my command, quite simple
