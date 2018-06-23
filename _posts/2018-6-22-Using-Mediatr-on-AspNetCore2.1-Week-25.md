@@ -24,14 +24,14 @@ Mediart is a .net open source projet ([GitHub](https://github.com/jbogard/Mediat
 ## Usage
 ### Install
 Mediatr is available on nuget for .net standard 2.0 project (it's also available for .net framework projects). You just enter this command on the package manager console
-```
-Install-Package MediatR
-```
+
+> Install-Package MediatR
+
 ### Wiring with Ioc container
 For linking messages and handling, MediatR neds an IoC container. If like me you think the one included in Asp.Net core 2.1 is enough you have to install the package for this container
-```
-Install-Package MediatR.Extensions.Microsoft.DependencyInjection
-```
+
+> Install-Package MediatR.Extensions.Microsoft.DependencyInjection
+
 (this package as a dependance to the first one so only this one is enough).
 And you configure MediatR like this in your Startup.ConfigureService
 ```C#
