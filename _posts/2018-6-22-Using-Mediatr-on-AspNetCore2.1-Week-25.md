@@ -20,7 +20,7 @@ In a web application / rpc via http api / rest api the command are launched by a
 ## Mediatr
 If you want to implement CQRS you'll have to do a lot of boilerplate code for wiring messages and their handling or you can use a package that does all this work for you.
 
-Mediart is a .net open source projet ([GitHub](https://github.com/jbogard/MediatR),[Nuget](https://www.nuget.org/packages/MediatR/)) created by [Jimmy Bogard](https://twitter.com/jbogard). It's an implementation of the Mediator pattern and this pattern was created for decoupling message from handling.
+Mediart is a .Net open source project ([GitHub](https://github.com/jbogard/MediatR),[Nuget](https://www.nuget.org/packages/MediatR/)) created by [Jimmy Bogard](https://twitter.com/jbogard). It's an implementation of the Mediator pattern, this pattern purpose is to decouple message from handling.
 ## Usage
 ### Install
 Mediatr is available on nuget for .net standard 2.0 project (it's also available for .net framework projects). You just enter this command on the package manager console :
@@ -32,7 +32,7 @@ For linking messages and handling, MediatR needs an IoC container. If you think 
 
 > Install-Package MediatR.Extensions.Microsoft.DependencyInjection
 
-(this package as a dependance to the first one so only this one is enough).
+This package as a dependancy to the first one so only this one is enough.
 And you configure MediatR like this in your Startup.ConfigureService
 
 ```cs
@@ -64,7 +64,7 @@ public class LoginCommand : IRequest<LoginCommandResult>
 - I have DataAnnotations validation attribute for validating this message
 - The generic argument of IRequest is the type of the result returned by the handler. Here it's a command with a result, simply because the user might enter bad login or password. I could manage to have no result as it's a command but it's easier to do that way.
 
-For handling this command you nee two things. First the mediator instance : IMediatr (the implementation was declared before on the Startup) :
+For handling this command you need two things. First the mediator instance IMediatr :
 
 ```C#
 private readonly IMediator _mediator;
@@ -136,22 +136,27 @@ public async Task<IActionResult> Login(LoginCommand command)
 ```
 - First line calls the mediator and get the result asynchronously (you could have IO under this so it's better to do everything async)
 - Then I parse the result, most of this code is from the original security template for asp.net. I commented the 2FA part as I didn't implement it yet.
-- I reuse the ModelState for sending the error as it's the format waited for the client (rpc via http) in the event of a bad request (400)
+- I reuse the ModelState for sending the error as it's the format expected by the client (rpc via http) in the event of a bad request (400)
 This is the most complicated code I have on my controller action, most of the time it's just like this :
+
 ```C#
 var res = await mediator.Send(command);
 if (res.IsSucess)
     return new OkResult();
 return new BadRequestObjectResult(res.Errors);
 ```
+
 So why have a Controller at all ? Mainly because it has a few things to do : routing / http verbs / redirection and in some case like the login part, something more complex.
+
 ### Events
 I am using Azure Table for data storage. This service doesn't provide indexing out of the box, so you have to do it yourself. With event I can safely decouple my write model (inserting new element) and my read model (querying element based on some criteria). An event is pretty much like a command but implements INotification and there is no result here as the caller doesn't care about what happens next :
+
 ```C#
 public class TossPosted : INotification {
     public string TossId{get;set;}
 }
 ```
+
 - A toss is a message on my application (like a post or something)
 - I just put the tossId , I could put the whole Toss content but I choose to do like this
 
@@ -173,10 +178,16 @@ public class TossTagIndexHandler : INotificationHandler<TossPosted> {
     }
 }
 ```
-- with this I can add as many indexing strategy as I wich. I will have to create some batch processing when deploying it though.
-- I can use an other implementation for handling this on an other server or cloud service
+
+- With this I can add as many indexing strategies as I want. I will have to create some batch processing when deploying it though.
+- I can use an other implementation for handling this on another server or cloud service.
 - I also could decouple it more and the event handling would just push new CreateTossTagIndexCommand, but that would be too much code for no gain.
 ### Validation
-You didn't s*ee any command validation here, it's normal I use the new ApiController from aspnet core 2.1 who handles returning a 400 bad request with the model state if one of my attribute is not respected. And that's enough for me now.
+You didn't see any command validation here, it's normal I use the new ApiController from aspnet core 2.1 who handles returning a 400 bad request with the model state if one of my attribute is not respected. And that's enough for me now.
 ## Conclusion
 Mediatr really helped to decouple all my command / query / event handling. It also helped to keep my controller small as it's, in my opnion, one of the biggest problem in an mvc application.
+## Source
+- (https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
+- (https://github.com/jbogard/MediatR/wiki)
+- (https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-2.1?view=aspnetcore-2.1)
+- (https://martinfowler.com/bliki/CQRS.html)
