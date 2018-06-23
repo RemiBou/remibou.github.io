@@ -11,7 +11,7 @@ This is where all the select occurs. A query is a way to display a part of the s
 In a web application / rpc via http api / rest api the command are launched by a GET. The only exception being for technical reason (request too big). It's a GET so the user is able to get this query result whenever he wants to.
 
 ### Why split this that way :
-- Decoupling : by splitting your domain in two part where there was one, you can make them much more independant. The read model will always be coupled to the write model, at least when you'll update it, but the write model won't care how you read the data it'll just try to be as coherent as possible and follow the business expert view of it (CQRS is tighly linked to DDD in my point of view).
+- Decoupling : by splitting your domain in two part where there was one, you can make them much more independant. The read model will always be coupled to the write model, at least when you'll update it, but the write model won't care how you read the data it'll just try to be as coherent as possible and follow the business expert view of it (CQRS is tighly linked to DDD in my point of view). The raising of domain event will make the write model totally ignore about the read model.
 - Domain following : it's very important to have a code base as close as possible to what the domain expert think. Domain expert don't think database rows (CRUD), they think actions (command) and end user screens (queries).
 - Performance : if you store both domain in a data store optimised for it, you'll be able to get better performance. For instance you store the write model on a RDMS so you are sure that your system state is coherent and you can store the read model on a NoSQL database (like Redis) because you don't want to execute 150 joins when you want to display some data to the user. The read model is updated everytime something happens on the write model via event so the write model completly ignores what it is supposed to update.
 
@@ -61,7 +61,83 @@ public class LoginCommand : IRequest<LoginCommandResult>
 ```
 - it's a C# object which implements a generic "marker interface" IRequest (there is no method to implement) 
 - I have DataAnnotations validation attribute for validating this message
-- The generic argument of IRequest is the type of the result returned by the handler. Here it's a command with a result, simply because the user might enter bad login or password. I coul
+- The generic argument of IRequest is the type of the result returned by the handler. Here it's a command with a result, simply because the user might enter bad login or password. I could manage to have no result as it's a command but it's easier to do that way.
+
+For handling this command you nee two things. First the mediator instance : IMediatr (the implementation was declared before on the Startup) :
+
+```C#
+private readonly IMediator _mediator;
+public AccountController(IMediator mediator)
+{
+    _mediator = mediator;
+}
+```
+
+Then you call it that way
+```C#
+[HttpPost]
+[AllowAnonymous]
+public async Task<IActionResult> Login(LoginCommand command)
+{
+    var result = await _mediator.Send(command);
+    if (!result.IsSuccess)
+    {
+        if (result.IsLockout)
+            return Redirect("/lockout");
+        ModelState.AddModelError("UserName", "Invalid login attempt.");
+        return BadRequest(ModelState);
+
+    }
+    //if (result.Need2FA)
+    //{
+    //    return RedirectToAction("/loginWith2fa");
+    //}
+    return Ok();
+}
+```
+- first line calls the mediator and get the result asynchronously (you could have IO under this so it's better to do everything async)
+- then I parse the result, most of this code is from the original security template for asp.net. I commandted the 2FA part as I didn't implement it yet.
+- I reuse the ModelState for sending the error as it's the format waited for the client (rpc via http) in the event of a bad request (400)
+This is the most complicated code I have on my controller action, most of the time it's just like this
+```C#
+var res = await mediator.Send(command);
+if (res.IsSucess)
+    return new OkResult();
+return new BadRequestObjectResult(res.Errors);
+```
+So why have a Controller at all ? Mainly because it has a few things to do : routing / http verbs / redirection and in some case like the login part, something more complex.
 ### Events
+I am using Azure Table for data storage. This service doesn't provide indexing out of the box, so you have to do it yourself. With event I can safely decouple my write model (inserting new element) and my read model (querying element based on some criteria). An event is pretty much like a command but implements INotification and there is no result here as the caller doesn't care about what happens next :
+```C#
+public class TossPosted : INotification {
+    public string TossId{get;set;}
+}
+```
+- A toss is a message on my application (like a post or something)
+- I just put the tossId , I could put the whole Toss content but I choose to do like this
+
+Then for handling the event and create the index you implement INotificationHandler like this
+
+```C#
+public class TossTagIndexHandler : INotificationHandler<TossPosted> {
+    ///missing code : dependency injection, azure table init ...
+    public Task Handle(TossPosted notification, CancellationToken cancellationToken) {       
+        await mainTable.CreateIfNotExistsAsync();
+        
+        var toss = await _mediator.Send(new TossContentQuery(notification.TossId);
+        
+        var tasks = HashTagIndex
+            .CreateHashTagIndexes(toss)//this create an entry for each hashtag entered into a toss
+            .Select(h => mainTable.ExecuteAsync(TableOperation.Insert(h))
+            .ToList();
+        await Task.WhenAll(tasks);
+    }
+}
+```
+- with this I can add as many indexing strategy as I wich. I will have to create some batch processing when deploying it though.
+- I can use an other implementation for handling this on an other server or cloud service
+- I also could decouple it more and the event handling would just push new CreateTossTagIndexCommand, but that would be too much code for no gain.
 ### Validation
+You didn't s*ee any command validation here, it's normal I use the new ApiController from aspnet core 2.1 who handles returning a 400 bad request with the model state if one of my attribute is not respected. And that's enough for me now.
 ## Conclusion
+Mediatr really helped to decouple all my command / query / event handling. It also helped to keep my controller small as it's, in my opnion, one of the biggest problem in an mvc application.
