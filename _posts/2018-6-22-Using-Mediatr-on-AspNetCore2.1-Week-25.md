@@ -34,7 +34,7 @@ For linking messages and handling, MediatR needs an IoC container. If you think 
 
 (this package as a dependance to the first one so only this one is enough).
 And you configure MediatR like this in your Startup.ConfigureService
-```csharp
+```cs
 services.AddMediatR(typeof(Startup));
 ```
 I use the type Startup so MediatR will scan all my aspnet core project for implementation of the required interface.
@@ -44,7 +44,7 @@ You can view my code here : [https://github.com/RemiBou/Toss.Blazor/blob/master/
 ### Issuing Command / Query
 Once everything is bootstrapped you can create your first message. I created one for login-in the user. This kind of cases are weird because I don't update the database but in my mind it's still the global state of the system, in Mediatr there is not much difference between a command and a query anyway. Here is my command, quite simple
 
-```C#
+```cs
 public class LoginCommand : IRequest<LoginCommandResult>
     {
         [Required]
