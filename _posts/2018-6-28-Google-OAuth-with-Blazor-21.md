@@ -150,3 +150,5 @@ public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, 
 
 ## Account creation
 
+## Sources
+- <https://andrewlock.net/introduction-to-authorisation-in-asp-net-core/>
