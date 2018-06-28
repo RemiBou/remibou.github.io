@@ -145,10 +145,96 @@ public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, 
 ```
 
 - The token is not a parameter of the action as there could be many providers, the GET parameters will be read by the signInManager in the httpcontext directly.
-
-
+- We still have to create a local account for this user, so we redirect him to "/account/externalLogin" if he doesn't have one yet (he'll enter his user name). The user account will be created at this time. 
+- If the user is logged in, we can redirect him to the homepage, the property User in our Controller will be filled with his informations.
 
 ## Account creation
+This step is build with a razor page like this
+
+```cs
+@page "/account/externalLogin"
+@inject IHttpClient HttpClient;
+@inject IUriHelper UriHelper
+<h4>Associate your @model.Provider account.</h4>
+<hr />
+
+<p class="text-info">
+    You've successfully authenticated with <strong>@model.Provider</strong>.
+    Please enter an email address and a login for this site below and click the Register button to finish
+    logging in.
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" >
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input id="Email" bind="@model.Email" class="form-control" />
+            </div>           
+            <button type="button" onclick="@ExternalLoginConfirm" class="btn btn-default">Register</button>
+        </form>
+    </div>
+</div>
+
+
+@functions {
+
+    ExternalLoginConfirmationCommand model = new ExternalLoginConfirmationCommand();
+    protected override async Task OnInitAsync()
+    {
+        var response = await Http.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/api/account/externalLoginDetails"));
+        model = JsonUtil.Deserialize<ExternalLoginConfirmationCommand>(await response.Content.ReadAsStringAsync());
+        StateHasChanged();
+    }
+    async Task ExternalLoginConfirm()
+    {
+        var requestJson = JsonUtil.Serialize(model);
+        await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Post, "/api/account/externalLoginConfirmation")
+        {
+            Content = new StringContent(requestJson, System.Text.Encoding.UTF8, "application/json")
+        });
+        UriHelper.NavigateTo("/");
+    }
+}
+```
+
+- I call with a get externalLoginDetails for prefilling the form with the user's email address
+- Then I post the content of the form. I don't handle error here, if you want to see how I manage valdiation, please go to my repo.
+- UriHelper.NavigateTo("/") send the user to the home page.
+
+here is the content of the actionext ernalLoginConfirmation
+
+```cs
+[HttpPost, AllowAnonymous]
+public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationCommand command)
+{
+     // Get the information about the user from the external login provider
+    var info = await _signInManager.GetExternalLoginInfoAsync();
+    if (info == null)
+    {
+        throw new ApplicationException("Error loading external login information during confirmation.");
+    }
+    var user = new ApplicationUser { UserName = command.Email, Email = command.Email, EmailConfirmed = true };
+    var result = await _userManager.CreateAsync(user);
+    if (result.Succeeded)
+    {
+        result = await _userManager.AddLoginAsync(user, info);
+        if (result.Succeeded)
+        {
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return Ok();
+        }
+    }
+    return BadRequest();
+}
+```
+
+- I force EmailConfirmed to true, as I trust google on this, maybe I should use "info" instead of the command
+- This creates the user and add login information to him, you can have multiple external providers for one user but I won't use it here as I think it a really edge case.
+
+## Conclusion
+
+The aspnet security code was easy to adapt to a full asp page, there is many builtin providers (facebook, microsoft ...) and I thin I'll add more and more.
 
 ## Sources
 - <https://andrewlock.net/introduction-to-authorisation-in-asp-net-core/>
