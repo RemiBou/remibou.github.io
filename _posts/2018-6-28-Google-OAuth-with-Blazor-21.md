@@ -1,4 +1,4 @@
-Asp.net core project template provide everything for quickly implementing OAuth via various providers. But these templates are based on aspnet core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.
+Asp.net core project template provides everything for quickly implementing OAuth via various providers. But these templates are based on aspnet core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.
 
 My app has 3 [TOSS](https://github.com/RemiBou/Toss.Blazor) librairies :
 - Client : the blazor code
@@ -17,7 +17,7 @@ services.AddAuthentication()
           });
 ```
 
-- For getting the parameters please visit <https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-2.1&tabs=aspnetcore2x>
+- For getting the configuration values please visit <https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-2.1&tabs=aspnetcore2x>
 - The first line adds all the services needed by aspnet (you won't need any of those directly but you can find the detail [here](https://github.com/aspnet/Security/blob/648bb1e8101beb6d0f2d8069a0b57e165318a52a/src/Microsoft.AspNetCore.Authentication/AuthenticationServiceCollectionExtensions.cs)
 - The second line adds google as an OAuth provider [source code here](https://github.com/ume05rw/AspNetCore.WithFrameworkSource.All.2.0/blob/82ee05dd041aa93cfe4ba07b74dd4d8d1d68b1de/AspNetCore/Security/src/Microsoft.AspNetCore.Authentication.Google/GoogleExtensions.cs)
 
@@ -27,10 +27,10 @@ Then you need to setup the authentication middleware in Configure
     app.UseAuthentication();
 ```
 
-- You have to put it BEFORE the "UseMvc"
+- You have to put it BEFORE the "UseMvc()"
 
 ## Listing Providers
-Now everything is setu let's start with the first step of this process : listing the authentication providers the user can use.
+Now everything is setup let's start with the first step of this process : listing the authentication providers the user can use.
 
 On your AccountController add this action
 
@@ -49,7 +49,7 @@ On your AccountController add this action
 
 - The _signinManager needs to be injected in your controller (SignInManager<ApplicationUser>)
 
-This action will be called by ajax on your client side, you will have two part, your blazor page will look like this
+This action will be called by ajax on your client side. Your blazor page will look like this
 
 ```cs
 @page "/login"
@@ -85,10 +85,10 @@ This action will be called by ajax on your client side, you will have two part, 
 }
 ```
 
-- This calls the action we just created and bind the result to the loginProviders local field, blazor will take care of the rest
+- This calls the action we just created and bind the result to the loginProviders local field, blazor will take care of the binding with the html
 - I'm not sure StateHasChanged() is needed here 
-- A list of button with each providers will be displayed (only Google at this point)
-- This is one of the only traditionnal form post in the app as the next step will be hard to implement in ajax, and in a UX point of view it doesn't change anything
+- A button list with each providers will be displayed (only Google at this point)
+- This is one of the only traditionnal form post in the app as the next step will be hard to implement in ajax, and in a UX point of view it doesn't change anything (user browser is redirected)
 
 ## Redirection
 
@@ -104,12 +104,13 @@ public async Task<IActionResult> ExternalLogin([FromForm] string provider)
     return Challenge(properties, provider);
 }
 ```
-- The first line is the link on which the user will be redirected with his token (it will be decyphered and will give me the user's email so I can auth him)
-- the Challenge result wil give instruction which will return a 401 to the user browser with the login page url (google's)
+
+- The first line is the link on which the user will be redirected with his token (it will be decyphered and will give me the user's email so I can auth him).
+- The Challenge result will return a 401 to the user browser with the login page url (google's).
 
 ## Landing page
 
-At this point, the user is on google login page he enters his credentials and accept to give some informations to the application you declared in google console. For now we just ask for the email and name, but you can ask for other informations about your suer as well.
+At this point, the user is on google login page he enters his credentials and accept to give some informations to the application you declared in google console. For now we just ask for the email and name, but you can ask for other informations about your user as well.
 
 For the landing page after this approval (which will be asked only once) the user will land on the following action
 
@@ -145,11 +146,12 @@ public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, 
 ```
 
 - The token is not a parameter of the action as there could be many providers, the GET parameters will be read by the signInManager in the httpcontext directly.
-- We still have to create a local account for this user, so we redirect him to "/account/externalLogin" if he doesn't have one yet (he'll enter his user name). The user account will be created at this time. 
+- We still have to create a local account for this user, so we redirect him to "/account/externalLogin". The user account in our db will be created at this time. 
 - If the user is logged in, we can redirect him to the homepage, the property User in our Controller will be filled with his informations.
 
 ## Account creation
-This step is build with a razor page like this
+
+This step is built with a razor page like this
 
 ```cs
 @page "/account/externalLogin"
@@ -199,10 +201,10 @@ This step is build with a razor page like this
 ```
 
 - I call with a get externalLoginDetails for prefilling the form with the user's email address
-- Then I post the content of the form. I don't handle error here, if you want to see how I manage valdiation, please go to my repo.
+- Then I post the content of the form. I don't handle error here, if you want to see how I manage validation, please go to my repo.
 - UriHelper.NavigateTo("/") send the user to the home page.
 
-here is the content of the actionext ernalLoginConfirmation
+Here is the content of the action externalLoginConfirmation
 
 ```cs
 [HttpPost, AllowAnonymous]
@@ -232,9 +234,9 @@ public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirma
 - I force EmailConfirmed to true, as I trust google on this, maybe I should use "info" instead of the command
 - This creates the user and add login information to him, you can have multiple external providers for one user but I won't use it here as I think it a really edge case.
 
-## Conclusion
-
-The aspnet security code was easy to adapt to a full asp page, there is many builtin providers (facebook, microsoft ...) and I thin I'll add more and more.
-
 ## Sources
+
 - <https://andrewlock.net/introduction-to-authorisation-in-asp-net-core/>
+- <https://github.com/aspnet/Security>
+- <https://blazor.net>
+
