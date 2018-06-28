@@ -4,9 +4,9 @@ title: About this Blog
 ---
 ## Why am I doing this ?
 So I created this blog for many reasons :
-- testing jekyll on github pages
-- work my writing skills
-- explain to the world what I am doing
+- Testing jekyll on github pages
+- Work my writing skills
+- Explain to the world what I am doing
 I'll try to post as often as possible (every week seems a nice challenge).
 
 ## Who am I ?
