@@ -1,7 +1,3 @@
----
-layout: post
-title: About this Blog
----
 ## Why am I doing this ?
 So I created this blog for many reasons :
 - Testing jekyll on github pages
