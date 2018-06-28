@@ -3,7 +3,7 @@
 #
 
 # Name of your site (displayed in the header)
-name: Rémi Bourgarel's Blog
+name: Rémi Bourgarel Blog
 
 # Short bio or description (displayed in the header)
 description: SE from Toulouse, interested in .net, spring, angular, cloud, IA
@@ -16,12 +16,8 @@ avatar: https://avatars2.githubusercontent.com/u/1358970?s=40&v=4
 
 # Includes an icon in the footer for each username you enter
 footer-links:
-  dribbble:
   email: bourgarel.remi@gmail.com
-  facebook:
-  flickr:
   github: RemiBou
-  instagram:
   linkedin: r%C3%A9mi-bourgarel-8092a812/
   rss: Feed
   twitter: rembou1
