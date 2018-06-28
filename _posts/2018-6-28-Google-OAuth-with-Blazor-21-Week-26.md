@@ -1,3 +1,7 @@
+---
+layout: post
+title: Google OAuth with Blazor and Aspnet Core 2.1
+---
 Asp.net core project template provides everything for quickly implementing OAuth via various providers. But these templates are based on aspnet core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.
 
 My app has 3 [TOSS](https://github.com/RemiBou/Toss.Blazor) librairies :
