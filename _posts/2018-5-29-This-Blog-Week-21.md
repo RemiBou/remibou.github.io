@@ -8,9 +8,9 @@ I'll try to post as often as possible (every week seems a nice challenge).
 ## Who am I ?
 My name is Rémi Bourgarel, born in 86 in Toulouse where I still live. I am passtionnated by software development I have currently many point of interest :
 - .net :  .net core, .net framework, asp.net, blazor, ml.net
-- spring
-- angular (the last two are for my new job)
-- cloud computing (mainly azure for now)
+- Spring
+- Angular (the last two are for my new job)
+- Cloud computing (mainly azure for now)
 
 ## Jekyll
 
