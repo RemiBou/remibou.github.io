@@ -1,3 +1,8 @@
+---
+layout: post
+title: Simple Programmer free bloging course
+---
+
 [Simple Programmer](https://simpleprogrammer.com/) is a blog / online course website for developers, it's mainly maintained by John Sonmez. While it began as a technical blog it's not more oriented on soft skills and career advise. 
 I think I began to read this blog around 2009-2010 and I've been reading regularly it's post since. Sometimes it's not really interesting (like John thoughts when he didn't have enough workout during the week or how you can negociate 
 your pay for a job in the US) but most of the time it's a good read and easy to understand.
