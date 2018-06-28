@@ -7,7 +7,7 @@ So I created this blog for many reasons :
 - testing jekyll on github pages
 - work my writing skills
 - explain to the world what I am doing
-I'll try to post as often as possible (every week seems a nice challenge)
+I'll try to post as often as possible (every week seems a nice challenge).
 
 ## Who am I ?
 My name is Rémi Bourgarel, born in 86 in Toulouse where I still live. I am passtionnated by software development I have currently many point of interest :
