@@ -1,3 +1,7 @@
+---
+layout: post
+title: Blazor, an Introduction
+---
 ## What is Blazor ?
 (this post is based on Blazor 0.3)
 
