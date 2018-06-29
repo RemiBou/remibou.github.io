@@ -1,4 +1,4 @@
-
+# Using Mediatr on ASPNET Core 2.1
 
 ## CQRS
 CQRS means Command and Query Relationship Seggregation. This is a design pattern or a development practice on which you split your domain in 2 parts : the write and the read model.
