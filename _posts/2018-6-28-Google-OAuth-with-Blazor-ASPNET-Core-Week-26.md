@@ -1,10 +1,11 @@
+# Implementing Google OAuth with Blazor (0.4) and ASPNET Core 2.1.1
 
-Asp.net core project template provides everything for quickly implementing OAuth via various providers. But these templates are based on aspnet core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.
+ASPNET Core project template provides everything for quickly implementing OAuth via various providers. But these templates are based on ASPNET Core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.
 
-My app has 3 [TOSS](https://github.com/RemiBou/Toss.Blazor) librairies :
-- Client : the blazor code
-- Server : aspnet core app serving RPC via HTTP
-- Shared : shared class between client and server
+My solution([TOSS](https://github.com/RemiBou/Toss.Blazor)) has 3 projects :
+- Client : the blazor code (librairy targeting netstandard 2.0)
+- Server : ASPNET Core  app serving RPC via HTTP  (app targeting netcoreapp2.1)
+- Shared : shared class between client and server  (librairy targeting netstandard 2.0)
 
 ## Server configuration
 You first need to configure the Google OAuth on your server application. Just add the following code in ConfigureServices
@@ -19,7 +20,7 @@ services.AddAuthentication()
 ```
 
 - For getting the configuration values please visit <https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-2.1&tabs=aspnetcore2x>
-- The first line adds all the services needed by aspnet (you won't need any of those directly but you can find the detail [here](https://github.com/aspnet/Security/blob/648bb1e8101beb6d0f2d8069a0b57e165318a52a/src/Microsoft.AspNetCore.Authentication/AuthenticationServiceCollectionExtensions.cs)
+- The first line adds all the services needed by ASPNET Core  (you won't need any of those directly but you can find the detail [here](https://github.com/aspnet/Security/blob/648bb1e8101beb6d0f2d8069a0b57e165318a52a/src/Microsoft.AspNetCore.Authentication/AuthenticationServiceCollectionExtensions.cs)
 - The second line adds google as an OAuth provider [source code here](https://github.com/ume05rw/AspNetCore.WithFrameworkSource.All.2.0/blob/82ee05dd041aa93cfe4ba07b74dd4d8d1d68b1de/AspNetCore/Security/src/Microsoft.AspNetCore.Authentication.Google/GoogleExtensions.cs)
 
 Then you need to setup the authentication middleware in Configure
