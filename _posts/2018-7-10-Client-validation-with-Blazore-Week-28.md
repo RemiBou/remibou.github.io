@@ -38,7 +38,15 @@ Searching for a specific part of code in a large code base written by people you
 1. Clone the repo
 2. [HtmlHelper.cs](https://github.com/aspnet/Mvc/blob/4f1f97b5d524b344c34a25a7031691626d50ec68/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/HtmlHelper.cs) then search ref to "ValidationInputCssClassName"
 3. Found [DefaultHtmlGenerator](https://github.com/aspnet/Mvc/blob/4f1f97b5d524b344c34a25a7031691626d50ec68/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/DefaultHtmlGenerator.cs), the method AddValidationAttributes line 1384 got my attention but it's protected, so I can't use it, and maybe it's doing too muche for what I need s I got to dig deeper. It's calling a method "AddAndTrackValidationAttributes" on some validationAttributeProvider, I guess this adds entry to the attributes in TagHelper.
-4. This method implementaiton I think is [this one](https://github.com/aspnet/Mvc/blob/4f1f97b5d524b344c34a25a7031691626d50ec68/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/DefaultValidationHtmlAttributeProvider.cs)
+4. This method implementiaton I think is [this one](https://github.com/aspnet/Mvc/blob/4f1f97b5d524b344c34a25a7031691626d50ec68/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/DefaultValidationHtmlAttributeProvider.cs), this could be a good starting point but still it seems like an abstraction layer above Data Annotation (not data annotation in using statement). So I can try to find the implementation for DataAnnotation and I'll be good.
+5. I find [DataAnnotationsClientModelValidatorProvider](https://github.com/aspnet/Mvc/blob/4f1f97b5d524b344c34a25a7031691626d50ec68/src/Microsoft.AspNetCore.Mvc.DataAnnotations/Internal/DataAnnotationsClientModelValidatorProvider.cs) which is exaclty what I was looking for
 
+So now I need to do 4 things :
+- Find the lifecycle of this class and create an instance of it
+- Call the method AddValidationAttributes with the good parameters
+- Get the result and add it to my blazor view
+
+## Create a DefaultValidationHtmlAttributeProvider
+I first look in the repo if there is any instanciation of this class, maybe some unit test will help to instaciate it with the least possible things (maybe I'll miss some feature but still)
 
 
