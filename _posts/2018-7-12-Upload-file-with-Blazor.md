@@ -47,7 +47,7 @@ Blazor.registerFunction("getFileData", function (inputFile) {
 
 - I have to do this weird replace as there is a bug in Blazor regarding async js interop calls (instead of passing "inputFile" it passes ""inputfile""))
 - I use a promise as we can't read file synchronously in js and Blazor needs a Promise for calling async js method
-- This code is greatly inspired by (https://blog.shovonhasan.com/using-promises-with-filereader/), it helped because I find it very hard to understand promise.
+- This code is greatly inspired by <https://blog.shovonhasan.com/using-promises-with-filereader/>, it helped because I find it very hard to understand promise.
 - we could easily remove the jquery dependency
 - readAsDataURL appends information to the file base64, so we have to split it and get the 2nd part
 
@@ -87,11 +87,11 @@ Here is the code used to save the file content on the server, but once you have 
 - I like to use the Path API for managing this kind of files 
 - It's sad we can't get the binaries as a method parameter (I hate those Request/Response mega-class properties)
 
-You can find this code and execute it on my Toss project here (https://github.com/RemiBou/Toss.Blazor).
+You can find this code and execute it on my Toss project here <https://github.com/RemiBou/Toss.Blazor>.
 
 ### Reference
-- (https://blog.shovonhasan.com/using-promises-with-filereader/)
-- (https://blazor.net/docs/javascript-interop.html)
-- (https://github.com/aspnet/Blazor/issues/527)
-- (https://github.com/aspnet/Blazor/issues/479)
-- (https://stackoverflow.com/questions/32556664/getting-byte-array-through-input-type-file/32556944#32556944)
+- <https://blog.shovonhasan.com/using-promises-with-filereader/>
+- <https://blazor.net/docs/javascript-interop.html>
+- <https://github.com/aspnet/Blazor/issues/527>
+- <https://github.com/aspnet/Blazor/issues/479>
+- <https://stackoverflow.com/questions/32556664/getting-byte-array-through-input-type-file/32556944#32556944>
