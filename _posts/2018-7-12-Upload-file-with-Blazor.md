@@ -16,7 +16,7 @@ You need a file input and handle the onchange event with Blazor/C#
     }
 ```
 
-- We'll receive the file binary as base64 from the javascript call as byte arrays are not serializable in json and this is the format of exchange between C# and js.
+- We'll receive the file binary as base64 from the javascript function because byte arrays are not serializable in json and this is the format of exchange between C# and js.
 - the api will just send back the file name where the file is saved, but you can do what you want.
 
 ## JS side
@@ -34,7 +34,6 @@ const readUploadedFileAsText = (inputFile) => {
             var data = {
                 content: temporaryFileReader.result.split(',')[1]
             };
-            console.log(data);
             resolve(data);
         }, false);
         temporaryFileReader.readAsDataURL(inputFile.files[0]);
@@ -50,6 +49,7 @@ Blazor.registerFunction("getFileData", function (inputFile) {
 - I use a promise as we can't read file synchronously in js and Blazor needs a Promise for calling async js method
 - This code is greatly inspired by (https://blog.shovonhasan.com/using-promises-with-filereader/), it helped because I find it very hard to understand promise.
 - we could easily remove the jquery dependency
+- readAsDataURL appends information to the file base64, so we have to split it and get the 2nd part
 
 ### Blazor JS Interop
 Now the bridge between C# and JS
@@ -86,3 +86,12 @@ Here is the code used to save the file content on the server, but once you have 
 
 - I like to use the Path API for managing this kind of files 
 - It's sad we can't get the binaries as a method parameter (I hate those Request/Response mega-class properties)
+
+You can find this code and execute it on my Toss project here (https://github.com/RemiBou/Toss.Blazor).
+
+### Reference
+- (https://blog.shovonhasan.com/using-promises-with-filereader/)
+- (https://blazor.net/docs/javascript-interop.html)
+- (https://github.com/aspnet/Blazor/issues/527)
+- (https://github.com/aspnet/Blazor/issues/479)
+- (https://stackoverflow.com/questions/32556664/getting-byte-array-through-input-type-file/32556944#32556944)
