@@ -1,4 +1,4 @@
-# CSRF protection on a ASPNET Core / Blazor app
+# CSRF protection with ASPNET Core and Blazor
 
 CSRF is a well know web app vulnerability, you can find more about it here  <https://scotthelme.co.uk/csrf-is-dead/>. As you can see on the title, this vulerability is dead. But it's dead for everyone with an up to date browser. So we have to implmeent classic protections until every browser has implemented the protection and everyone has updated his browser.
 
