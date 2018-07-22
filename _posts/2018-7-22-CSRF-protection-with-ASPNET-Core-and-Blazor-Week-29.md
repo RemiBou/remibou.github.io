@@ -32,7 +32,7 @@ On the server side I need an ASPNET Core middleware for setting the cookie if no
         {
             if(context.Request.Cookies["CSRF-TOKEN"] == null)
             {
-                var token = _antiforgery.GetTokens(context);
+                var token = _antiforgery.GetAndStoreTokens(context);
                 context.Response.Cookies.Append("CSRF-TOKEN", token.RequestToken, new Microsoft.AspNetCore.Http.CookieOptions { HttpOnly = false });
             }
             await _next(context);
