@@ -1,6 +1,6 @@
 # CSRF protection on a ASPNET Core / Blazor app
 
-CSRF is a well know web app vulnerability, you canf ind more about it here <CSRF is a well know web app vulnerability, you canf ind more about it here <https://scotthelme.co.uk/csrf-is-dead/>. As you can see on the title, this vulerability is dead. But it's dead for everyone with an up to date browser. So we have to implmeent classic protections until everybrowser has implemented the protection and everyone has updated his browser.
+CSRF is a well know web app vulnerability, you can find more about it here  <https://scotthelme.co.uk/csrf-is-dead/>. As you can see on the title, this vulerability is dead. But it's dead for everyone with an up to date browser. So we have to implmeent classic protections until every browser has implemented the protection and everyone has updated his browser.
 
 In this article I'll show you how I implemented it with my Blazor / ASPNET Core app calles [TOSS](https://github.com/RemiBou/Toss.Blazor)
 
@@ -11,10 +11,10 @@ Usually CSRF protection works this way :
 - server validate the field is on the client request and validate it
 
 But in a SPA, forms are not created on server side so we need an other way. The one I'll use is the following :
-- Server sends a non http validation cookie
-- client read the cookie and will send its value in an header for every http request (ajax) it'll do
+- Server sends a non http cookie with the validation token (so it can be read from javascript)
+- client read the cookie and will send its value in an header for every http request (ajax) it'll execute
 
-ON the server side I need an ASPNET Core middleware for setting the cokie if not present
+On the server side I need an ASPNET Core middleware for setting the cookie if not present
 
 ```cs
     public class CsrfTokenCOokieMiddleware
@@ -41,7 +41,7 @@ ON the server side I need an ASPNET Core middleware for setting the cokie if not
 ```
 
 - Middleware doesn't have to implement a specific interface, just declare this method "async Task InvokeAsync(HttpContext context)", don't know why the .Net core team didn't securized it with an interface though
-- I use the built-in IAntiforgery service for generating the value as I have no idea how it's supposed to be built. When we are talking about security we have to avoid as much as we can, in-house code.
+- I use the built-in IAntiforgery service for generating the value as I have no idea how it's supposed to be built. When we are talking about security we have to avoid, as much as we can, in-house code.
 
 Then I register this Middleware in my Configure method on Startup.cs
 
@@ -70,7 +70,7 @@ In all the method I want to protect (mostly POST, as GET have no impact on the s
 
 ## Client Side (Blazor 0.4)
 
-On the client side, first I need to read the cookie's value (both are hosted on the same domain, so when I load my app the cookie is supposed to be set). FOr reading the cokie value I'll have to use Js interop because there is no method in Blazor for reading the cookies.
+On the client side, first I need to read the cookie's value (both are hosted on the same domain, so when I load my app the cookie is supposed to be set). For reading the cookie value I'll have to use Js interop because there is no method in Blazor for reading the cookies.
 
 ```js
 Blazor.registerFunction("getDocumentCookie", function () {
@@ -80,7 +80,7 @@ Blazor.registerFunction("getDocumentCookie", function () {
 
 - I use a container for my result because the string serialization/deserialization in Blazor is buggy
 
-Then in C# is read this value 
+Then in C# I read this value 
 
 ```cs
  public static string GetCookie()
@@ -116,7 +116,7 @@ I created a service for parsing this value
     }
 ```
 
-The DI settings are set in Program.cs n my client project like this
+The DI settings are set in Program.cs in my client project like this
 
 ```cs
 configure.Add(new ServiceDescriptor(
@@ -125,7 +125,7 @@ configure.Add(new ServiceDescriptor(
    ServiceLifetime.Singleton));
 ```
 
-Then I add the headers on all my http calls like this(I use a wrapper around HttpClient for avoiding copy/paste)
+Then I add the headers on all my http calls like this (I use a wrapper around HttpClient for avoiding copy/paste)
 
 ```cs
  private HttpRequestMessage PrepareMessage(HttpRequestMessage httpRequestMessage)
