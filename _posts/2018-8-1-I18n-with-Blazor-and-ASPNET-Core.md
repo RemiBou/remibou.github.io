@@ -153,12 +153,12 @@ Now I need a component that'll display the good translation for a given key. Her
  - I couldn't use directly the i18nService in the views because view render is not async (issue [1240](https://github.com/aspnet/Blazor/issues/1240) and my Get() method is
  - I think this technique might be wrong as it would create a lot of very small component on a large app. But it's the only way I found so far.
  
- ### Integration
+### Integration
  For displaying a translation I do it like that :
  
  ```cs
  <Trad key="Welcome" />
  ```
  
- ## Conclusion
+## Conclusion
 I chose to use the same translation storage mechanism (resource file) for both back and front end so it'll make those file management easier and we'll be able to reuse some translation across both part. The developer experience is not perfect and there could be an impact on performance, but still it's working. The biggest challenge here was finding a good async method for calling the Get method as in the current version of Blazor (0.5.1) call to ".Result" or ".Wait" on a Task result on browser hanging.
