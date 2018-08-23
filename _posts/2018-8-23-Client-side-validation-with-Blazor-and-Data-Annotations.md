@@ -192,6 +192,8 @@ And it just works, the error message are displayed :) I didn't have to do 1 line
 
 Wiring Blazor and DataAnnotation wasn't that hard and all the existing part of Blazor are already enough for doing all this. Maybe the developer experience could be better with Linq Expression, and we could try to add something for adding a css class to invalid textbox.
 
+There is also one notable limitation : if you implement custom validation attribute that needs access to server ressources like a database, it will fail. But for these validation I don't think that managing it with DataAnnotation is really a good idea, sometimes a simple "if" is enough.
+
 ## Reference
 - <https://blazor.net/docs/components/index.html#component-disposal-with-idisposable>
 - <https://github.com/dotnet/corefx/tree/master/src/System.ComponentModel.Annotations/src>
