@@ -1,46 +1,44 @@
 # SITE CONFIGURATION
-baseurl: "/Type-on-Strap"
-url: "https://sylhare.github.io"
-title: Type on Strap # site's title
-description: "A website with blog posts and pages" # used by search engines
-
-
+url: "https://remibou.github.io"
+title:  Rémi Bourgarel's Blog # site's title
+description: "Blog about software development. Blazor, ASPNET Core, C#, Web Assembly, Spring, Angular, Docker " # used by search engines
+name: Rémi Bourgarel's Blog
+avatar: https://avatars2.githubusercontent.com/u/1358970?s=40&v=4
 # THEME-SPECIFIC CONFIGURATION
 theme_settings:
   # Meta
-  title: Type on Strap # blog's title
-  avatar: assets/img/triangle.svg
+  title:  Rémi Bourgarel's Blog # blog's title
   favicon: assets/favicon.ico
   gravatar: # Email MD5 hash
 
   # Header and footer text
   header_text: > #two or three lines to describe your site
-     <p>Change header text in <code>_config.yml</code> <br> to update this feature.</p>
+     <p>Rémi's Blog.</p>
   header_text_feature_image: assets/img/pexels/triangular.jpeg
   footer_text: >
    Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
 
   # Icons
   rss: true  # Make sure you created a feed.xml with feed.xml layout
-  email_address: # Full email address, e.g. "sam@example.com"
+  email_address: bourgarel.remi@gmail.com
   behance:
   bitbucket:
   dribbble:
   facebook:
   flickr:
   gitlab:
-  github: "sylhare"
+  github: "RemiBou"
   google_plus:
   instagram:
   keybase:
-  linkedin:  # Full URL
+  linkedin: https://www.linkedin.com/in/r%C3%A9mi-bourgarel-8092a812/
   pinterest:
   reddit:
   soundcloud:
-  stack_exchange:  # Full URL
+  stack_exchange:  https://stackoverflow.com/users/277067/remi-bourgarel
   steam:
   tumblr:
-  twitter: # "twitter username"
+  twitter: rembou1
   vimeo:
   wordpress:
   youtube:
@@ -54,13 +52,13 @@ theme_settings:
     pinterest:
     pocket:
     reddit: true
-    linkedin:
+    linkedin: true
     wordpress:
     email: true
 
   # Scripts / Features 
-  google_analytics: # Tracking ID, e.g. "UA-000000-01"
-  disqus_shortname:
+  google_analytics: UA-119823334-1
+  disqus_shortname: remibou
   katex: true # Enable if using math markup
   
   special_page:
