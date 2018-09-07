@@ -1,5 +1,7 @@
 # SITE CONFIGURATION
 url: "https://remibou.github.io"
+permalink: /:title/
+baseurl: ""
 title:  Rémi Bourgarel's Blog # site's title
 description: "Blog about software development. Blazor, ASPNET Core, C#, Web Assembly, Spring, Angular, Docker " # used by search engines
 name: Rémi Bourgarel's Blog
@@ -13,8 +15,8 @@ theme_settings:
 
   # Header and footer text
   header_text: > #two or three lines to describe your site
-     <p>Rémi's Blog.</p>
-  header_text_feature_image: assets/img/pexels/triangular.jpeg
+     <p>Rémi Bourgarel's Blog.</p>
+  header_text_feature_image: assets/img/pexels/computer2.jpeg
   footer_text: >
    Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
 

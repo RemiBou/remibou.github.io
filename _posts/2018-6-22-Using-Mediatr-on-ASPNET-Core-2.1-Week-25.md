@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, MediatR, ASPNET Core]
+---
 # Using Mediatr on ASPNET Core 2.1
 
 ## CQRS

@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, Visual Studio]
+---
 # An Introduction to Blazor
 
 ## What is Blazor ?

@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, I18N, ASPNET Core]
+---
 # Internationalizing a Blazor App with ASPNET Core as backend service
 
 A common task for developers is to make their aplication translated into the users language. Most of the frameworks provide tools for enabling easily such a task and let the developer focus on other things like stupid requirement or buggy API. Blazor being a new framework there isn't such a thing. In this blog post I'll show you my way of doing it.
