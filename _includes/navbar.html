@@ -19,7 +19,7 @@
     
     <!-- Menu -->
     <ul class="hide">
-        <!-- Auto Generation of NORMAL pages in the navbar -->
+        <!-- Auto Generation of NOORMAL pages in the navbar -->
         {% assign name_page = "" %}
         
         {% for page in site.pages %}
@@ -29,7 +29,7 @@
         <li class="separator"> | </li>
         <li>
             <a class="clear" href="{{ page.url | relative_url }}">
-                {{ page.title }}
+                 {{ page.title }}
             </a>
         </li>
         {% endif %}
