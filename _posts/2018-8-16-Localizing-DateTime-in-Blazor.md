@@ -1,6 +1,11 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, I18N, ASPNET Core]
+---
 # Localizing DateTime (and numbers) in Blazor
 
-When we create an app used by people from many country we soon face the challenge to translate it ([see my previous article](https://remibou.github.io/I18n-with-Blazor-and-ASPNET-Core/)). An other challenge is to make non-string data (numbers, date) understandable for everyone. Forinstance "01/02/2018" means "February 1st 2018" for a french person but it means "January 2nd 2018" for an english person.
+When we create an app used by people from many country we soon face the challenge to translate it ([see my previous article](/I18n-with-Blazor-and-ASPNET-Core/)). An other challenge is to make non-string data (numbers, date) understandable for everyone. Forinstance "01/02/2018" means "February 1st 2018" for a french person but it means "January 2nd 2018" for an english person.
 
 Fortunatly all these specific format are already setup by Microsoft, when we call "DateTime.Now.ToShortDateString()" it looks for the current culture (stored in the static property "CultureInfo.CurrentCulture") and create the good string for representing the DateTime.
 

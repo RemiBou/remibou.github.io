@@ -1,78 +1,117 @@
-#
-# This file contains configuration flags to customize your site
-#
-
-# Name of your site (displayed in the header)
-name: Rémi Bourgarel's Blog
-
-# Short bio or description (displayed in the header)
-description: A developer's blog
-
-# URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: https://avatars2.githubusercontent.com/u/1358970?s=40&v=4
-#
-# Flags below are optional
-#
-
-# Includes an icon in the footer for each username you enter
-footer-links:
-  email: bourgarel.remi@gmail.com
-  github: RemiBou
-  linkedin: r%C3%A9mi-bourgarel-8092a812/
-  rss: Feed
-  twitter: rembou1
-  stackoverflow: users/277067/remi-bourgarel
-
-# Enter your Disqus shortname (not your username) to enable commenting on posts
-# You can find your shortname on the Settings page of your Disqus account
-disqus: remibou
-
-# Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-google_analytics: UA-119823334-1
-theme: jekyll-theme-cayman
-
-# Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
-# Used for Sitemap.xml and your RSS feed
-url:
-
-# If you're hosting your site at a Project repository on GitHub pages
-# (http://yourusername.github.io/repository-name)
-# and NOT your User repository (http://yourusername.github.io)
-# then add in the baseurl here, like this: "/repository-name"
-baseurl: ""
-
-#
-# !! You don't need to change any of the configuration flags below !!
-#
-
+# SITE CONFIGURATION
+url: "https://remibou.github.io"
 permalink: /:title/
+baseurl: ""
+title:  Rémi Bourgarel's Blog # site's title
+description: "Blog about software development. Blazor, ASPNET Core, C#, Web Assembly, Spring, Angular, Docker " # used by search engines
+name: Rémi Bourgarel's Blog
+avatar: https://avatars2.githubusercontent.com/u/1358970?s=40&v=4
+# THEME-SPECIFIC CONFIGURATION
+theme_settings:
+  # Meta
+  title:  Rémi Bourgarel's Blog # blog's title
+  favicon: assets/favicon.ico
+  gravatar: # Email MD5 hash
 
-# The release of Jekyll Now that you're using
-version: v1.2.0
+  # Header and footer text
+  header_text: > #two or three lines to describe your site
+     <p>Rémi Bourgarel's Blog.</p>
+  header_text_feature_image: assets/img/pexels/computer2.jpeg
+  footer_text: >
+   Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
 
-# Jekyll 3 now only supports Kramdown for Markdown
-kramdown:
-  # Use GitHub flavored markdown, including triple backtick fenced code blocks
-  input: GFM
-  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
+  # Icons
+  rss: true  # Make sure you created a feed.xml with feed.xml layout
+  email_address: bourgarel.remi@gmail.com
+  behance:
+  bitbucket:
+  dribbble:
+  facebook:
+  flickr:
+  gitlab:
+  github: "RemiBou"
+  google_plus:
+  instagram:
+  keybase:
+  linkedin: https://www.linkedin.com/in/r%C3%A9mi-bourgarel-8092a812/
+  pinterest:
+  reddit:
+  soundcloud:
+  stack_exchange:  https://stackoverflow.com/users/277067/remi-bourgarel
+  steam:
+  tumblr:
+  twitter: rembou1
+  vimeo:
+  wordpress:
+  youtube:
+  
+  # Sharing options
+  share_buttons:
+    facebook: true
+    twitter: true
+    google_plus: true
+    tumblr:
+    pinterest:
+    pocket:
+    reddit: true
+    linkedin: true
+    wordpress:
+    email: true
 
-# Set the Sass partials directory, as we're using @imports
+  # Scripts / Features 
+  google_analytics: UA-119823334-1
+  disqus_shortname: remibou
+  katex: true # Enable if using math markup
+  
+  special_page:
+    search: 
+      icon: "search" # Assuming page link and icon are the same
+      enabled: true
+    tags:
+      icon: "tags"
+      enabled: true
+  
+  # Localization strings
+  str_follow_on: "Follow on"
+  str_rss_follow: "Follow RSS feed"
+  str_share_on: "Share on"
+  str_add_to: "Add to"
+  str_email: "Email"
+  str_tweet: "Tweet"
+  str_pin_it: "Pin it"
+  str_next_post: "Next post"
+  str_previous_post: "Previous post"
+  str_next_page: "Next"
+  str_previous_page: "Prev"
+  str_continue_reading: "Continue reading"
+  str_javascript_required_disqus: "Please enable JavaScript to view comments."
+
+  # Colours, typography and padding
+  # Open the "_sass > base" folder, and open "_variables.scss"
+  google_fonts: "Source+Sans+Pro:400,700,700italic,400italic"
+
+  # Post navigation
+  post_navigation: true
+  
+  
+# PAGINATION
+paginate: 5
+paginate_path: "blog/page:num"
+
+
+# PORTFOLIO
+collections:
+  portfolio:
+    output: true
+    permalink: /:collection/:name
+
+
+# BUILD SETTINGS
+markdown: kramdown
+highlighter: rouge
 sass:
-  style: :expanded # You might prefer to minify using :compressed
-
-# Use the following plug-ins
-gems:
-  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
-  - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
-
-# Exclude these files from your production _site
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - LICENSE
-  - README.md
-  - CNAME
+  sass_dir: _sass
+  style: :compressed
+plugins: [jekyll-paginate, jekyll-seo-tag]
+#theme: type-on-strap # Uncomment if using the theme as a jekyll theme gem
+exclude: ["Gemfile", "Gemfile.lock", "type-on-strap.gemspec", "*.gem", "LICENSE", "README.md", "screenshot.png", "package.json", "node_modules", "gulpfile.js", ".idea/*"]

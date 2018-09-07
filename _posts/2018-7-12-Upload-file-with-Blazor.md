@@ -1,4 +1,10 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, JSInterop]
+---
 # Uploading a file in a Blazor app
+
 Blazor is a SPA framework. At some point in a web application, you'll need to upload file to the server. Here is how you can do it with Blazor.
 
 Right now, Blazor doesn't suport this out of the box, we'll have to load the file content with js, take this content in C# and send it to the server.

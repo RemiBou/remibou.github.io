@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [meta]
+---
 # Simple Programmer blogging free course
 
 [Simple Programmer](https://simpleprogrammer.com/) is a blog / online course website for developers, it's mainly maintained by John Sonmez. While it began as a technical blog it's not more oriented on soft skills and career advise. 

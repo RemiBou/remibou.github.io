@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, Google, OAuth, ASPNET Core]
+---
 # Implementing Google OAuth with Blazor (0.4) and ASPNET Core 2.1.1
 
 ASPNET Core project template provides everything for quickly implementing OAuth via various providers. But these templates are based on ASPNET Core MVC. In this blog post I'll explain how I changed the code for implementing Google authentication on a Blazor App.

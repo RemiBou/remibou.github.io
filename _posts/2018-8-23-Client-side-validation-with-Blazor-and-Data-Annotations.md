@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor, DataAnnotation]
+---
 # Client side validation with Blazor and System.DataAnnotation
 
 Although I am not a big fan of client side validation (because you'll have to do the validation on server side anyway), there is always a time when using a client-side framework when you need to add some validation to your form and doing the simplest ones on the client-side can help you save some precious server CPU time. Also I don't like client-side validation because most of the time it doubles the work needed : you'll code the rules with your server-side technology (like ASPNET Core) and with your client-side technology (let's say Knockoutjs), this means that you have to keep both code in sync and you have to be able to do the same things in both side (and you can face difficulties like dealing with different implementations of regex).

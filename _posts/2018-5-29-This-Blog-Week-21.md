@@ -1,5 +1,13 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [meta]
+---
+
 # This Blog
+
 ## Why am I doing this ?
+
 So I created this blog for many reasons :
 - Testing jekyll on github pages
 - Work my writing skills
