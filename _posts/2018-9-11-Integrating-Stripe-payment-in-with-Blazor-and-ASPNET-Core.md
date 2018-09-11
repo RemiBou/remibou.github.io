@@ -4,10 +4,10 @@ feature-img: "assets/img/pexels/circuit.jpeg"
 tags: [Blazor, Stripe, JSInterop]
 ---
 
-# Integrating Stripe in a Blazore and ASPNET Core app
+# Integrating Stripe in a Blazor and ASPNET Core app
 Now our app is finished, I need to make money with it. The first thing I thought about was creating sponsored content : you post something and in exchange we display it on top of the results. 
 
-For the payment I chose Stripe as it seams easy to integrate (there is a nuget package for all the server side work).
+For the payment I chose [Stripe](https://stripe.com/fr) as it seams easy to integrate (there is a nuget package for all the server side work).
 
 The purpose of this blog post is mainly to show how Blazor JS Interop works and how easy it is.
 
@@ -23,10 +23,10 @@ First thing : the Blazor code for opening the modal. In my app it occurs on a bu
 @implements IStripeCallBack
 //whatever
 @function{
-protected async Task OnClick(UIEventArgs ev)
-{
-   await JSRuntime.Current.InvokeAsync<string>("stripeCheckout",new DotNetObjectRef(stripeCallBack), amountInCts);
-}
+    protected async Task OnClick(UIEventArgs ev)
+    {
+       await JSRuntime.Current.InvokeAsync<string>("stripeCheckout",new DotNetObjectRef(stripeCallBack), amountInCts);
+    }
     [JSInvokable]
     public async Task TokenReceived(string token)
     {       
@@ -98,7 +98,7 @@ Now the server side is simple
         }
     }
 ```
-- the secret API key must reside in your secrets json  ([a little google search shows that some people are not aware of it](https://www.google.fr/search?q=site:github.com+StripeConfiguration.SetApiKey&newwindow=1&rlz=1C1GGRV_enFR752FR752&ei=zDiYW4r1N8zCgAbqgJzICA&start=10&sa=N&biw=1348&bih=612)]
+- the secret API key must reside in your secrets json  ([a little google search shows that some people are not aware of it](https://www.google.fr/search?q=site:github.com+StripeConfiguration.SetApiKey&newwindow=1&rlz=1C1GGRV_enFR752FR752&ei=zDiYW4r1N8zCgAbqgJzICA&start=10&sa=N&biw=1348&bih=612))
 - I should send the amount from the client to the server, then compute the amount on the server side and if it doesn't match raise an exception so I'm sure that the amount displayed is the amount charged
 - Use stripe nuget package it's 100 times easier than managing the HTTP request by hand (I tried it)
 
