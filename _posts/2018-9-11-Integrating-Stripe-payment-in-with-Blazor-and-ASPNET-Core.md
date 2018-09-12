@@ -3,7 +3,6 @@ layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
 tags: [Blazor, Stripe, JSInterop]
 ---
-
 # Integrating Stripe in a Blazor and ASPNET Core app
 Now our app is finished, I need to make money with it. The first thing I thought about was creating sponsored content : you post something and in exchange we display it on top of the results. 
 
