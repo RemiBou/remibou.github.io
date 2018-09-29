@@ -4,7 +4,7 @@ feature-img: "assets/img/pexels/circuit.jpeg"
 tags: [tests, mediatr, aspnetcore, cosmodb]
 ---
 
-# Moving from unit test + Mock to Integration test and fake
+# Moving from unit test to integration/system test 
 *This post is not directly about Blazor but I wanted to blog about this technical change.*
 
 On my Toss project I decided to move from a Unit Test approach to an Integration test approach. In this blog post I'll try to explain the reasons and the technique employed.
@@ -33,9 +33,9 @@ This approach has drawbacks that lead me to getting rid of it :
 - Because you are not testing everything altogether you can have problem at runtime :  you didn't setup DI the right way, because your class doesn't implement the good interface, your configuration is not set ... 
 
 ## Technical solution
-The solution is integration test, here is how I did it :
+The solution is system test, we could call it integration test but for some of them there might be no dependency involved. Here I want to test my system as a whole.
 
-### Use the app DI setup
+### Use the ASPNET Core DI setup
 
 Here is my class setting up this :
 ```cs
