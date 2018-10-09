@@ -30,6 +30,7 @@
     "gulp-uglify": "^3.0.0"
   },
   "dependencies": {
+    "cryptiles": "^4.1.2",
     "lodash": "^4.17.5",
     "minimatch": "^3.0.2"
   }
