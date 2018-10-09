@@ -28,5 +28,9 @@
     "gulp-replace": "^1.0.0",
     "gulp-shell": "^0.6.5",
     "gulp-uglify": "^3.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5",
+    "minimatch": "^3.0.2"
   }
 }
