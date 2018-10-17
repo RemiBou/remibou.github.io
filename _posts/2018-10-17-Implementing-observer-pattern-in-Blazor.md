@@ -1,3 +1,9 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [blazor]
+---
+
 # Implementing the observer pattern with Blazor
 
 The observer pattern is a very interesting pattern for decoupling component. It is very used for decoupling UI and Business code : update your UI when something is changed on the business side.
@@ -58,7 +64,7 @@ Here is a simple component subscribing to this event showing when the data what 
 
 ## Conclusion
 
-This pattern is very usefull for syncing your component across your app while keeping them decoupled. 
+This pattern is very usefull for syncing your component across your app while keeping them decoupled. And again it shows that Blazor is a great project because you can use all the nice things that are already here in C# and .Net. The development might have started month ago but the amount of stuff you can reuse is enormous.
 
 ## Source
 -<https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/how-to-subscribe-to-and-unsubscribe-from-events>
