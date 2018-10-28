@@ -5,7 +5,7 @@ tags: [Blazor,ASPNET Core]
 ---
 # How to change Blazor dll file extension with ASPNET Core
 
-Blazor is a framework for executing library (.dll) targeting .net standard, in the browser. When the app loads it get via xhr your application binaries. The problem is, in some internal network or for some AV providers, downloading .dll files is forbidden. We can see in this github issue that this is a problem for some people : https://github.com/aspnet/Blazor/issues/172. While I think this problem will be resolved by the ASPNET team before the first release (if there is one), in this blog post I'll show you how to workaround this issue with the existing tools already present in ASPNET Core.
+Blazor is a framework for executing library (.dll) targeting .net standard, in the browser. When the app loads it get via xhr your application binaries. The problem is, in some internal network or for some AV providers, downloading .dll files is forbidden. We can see in this github issue that this is a problem for some people : <https://github.com/aspnet/Blazor/issues/172>. While I think this problem will be resolved by the ASPNET team before the first release (if there is one), in this blog post I'll show you how to workaround this issue with the existing tools already present in ASPNET Core.
 
 ## What happens 
 
@@ -106,7 +106,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 ```
 
 - I use the existing rewriting engine built-in ASPNET Core but you can use the one from your web server : nginx, apache, IIS ...
-- The regex is pretty simple, you can test yours here http://regexstorm.net/tester
+- The regex is pretty simple, you can test yours here <http://regexstorm.net/tester>
 - For testing I just extracted the powershell for getting the first request from chrome dev tools and changed the extension :
 
 ```powershell
