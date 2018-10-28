@@ -84,7 +84,7 @@ Here is the blazor.boot.json for my project Toss :
 
 And here is a screenshot of the Network tab during my app startup
 
-![Toss startup network tab](/assets/img/Capture.png "Toss startup network tab")
+![Toss startup network tab](/assets/img/Capture.PNG "Toss startup network tab")
 
 What we need to do happens on step 2 and 3 :
 - On client side, when we request a ".dll" change the extension to ".blazor"
@@ -139,7 +139,7 @@ XMLHttpRequest.prototype.open = function (method, url, async) {
 
 And it works :) Here is my network tab now
 
-![Toss startup network tab](/assets/img/Capture2.png "Toss startup network tab")
+![Toss startup network tab](/assets/img/Capture2.PNG "Toss startup network tab")
 
 ## Conclusion
 
