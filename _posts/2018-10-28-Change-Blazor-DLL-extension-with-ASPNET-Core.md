@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [blazor,aspnet]
+tags: [Blazor,ASPNET Core]
 ---
 # How to change Blazor dll file extension with ASPNET Core
 
