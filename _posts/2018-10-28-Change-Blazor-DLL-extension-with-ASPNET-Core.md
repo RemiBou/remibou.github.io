@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [blazor,aspnet]
+---
 # How to change Blazor dll file extension with ASPNET Core
 
 Blazor is a framework for executing library (.dll) targeting .net standard, in the browser. When the app loads it get via xhr your application binaries. The problem is, in some internal network or for some AV providers, downloading .dll files is forbidden. We can see in this github issue that this is a problem for some people : https://github.com/aspnet/Blazor/issues/172. While I think this problem will be resolved by the ASPNET team before the first release (if there is one), in this blog post I'll show you how to workaround this issue with the existing tools already present in ASPNET Core.
