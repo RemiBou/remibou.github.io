@@ -88,7 +88,7 @@ And here is a screenshot of the Network tab during my app startup
 
 What we need to do happens on step 2 and 3 :
 - On client side, when we request a ".dll" change the extension to ".blazor"
-- On server siden when a ".blazor" file is requested change it to ".dll" so it matches the physical file name
+- On server side, when a ".blazor" file is requested change it to ".dll" so it matches the physical file name
 
 ## Changing the incoming request
 
@@ -105,7 +105,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 }
 ```
 
-- I use the existing rewriting engine built-in ASPNET Core but you can use the on from your web server : nginx, apache, IIS ...
+- I use the existing rewriting engine built-in ASPNET Core but you can use the one from your web server : nginx, apache, IIS ...
 - The regex is pretty simple, you can test yours here http://regexstorm.net/tester
 - For testing I just extracted the powershell for getting the first request from chrome dev tools and changed the extension :
 
@@ -121,7 +121,7 @@ I got a 200 with the good HTTP request headers :)
 
 ## Changing on client side
 
-Now I need to change the file name on client side so XHR to "myassembly.dll" becomes "myasembly.blazor". I need to do this so it's the more discrete possible, the extension because ".dll" must be hard coded through most of the mono wasm and blazor code base. I tried to change the extension in the blazor.boot.json but my app couldn't start. So I chose to do this at the XHR level by overriding the method used by Blazor in blazor.webassembly.js ([source code)[https://github.com/aspnet/Blazor/blob/master/src/Microsoft.AspNetCore.Blazor.Browser.JS/src/Platform/Mono/MonoPlatform.ts].
+Now I need to change the file name on client side so XHR to "myassembly.dll" becomes "myasembly.blazor". I need to do this so it's the more discrete possible, because ".dll" must be hard coded through most of the mono wasm and blazor code base. I tried to change the extension in the blazor.boot.json via a middleware but my app couldn't start. So I chose to do this at the XHR level by overriding the method used by Blazor in blazor.webassembly.js ([source code)[https://github.com/aspnet/Blazor/blob/master/src/Microsoft.AspNetCore.Blazor.Browser.JS/src/Platform/Mono/MonoPlatform.ts].
 
 ```js
 
