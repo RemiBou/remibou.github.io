@@ -82,8 +82,8 @@ And here is a screenshot of the Network tab during my app startup
 ![Toss startup network tab](/images/Capture.png "Toss startup network tab")
 
 What we need to do happens on step 2 and 3 :
-- Change the file name in the json file ("Toss.Client.dll" becomes "Toss.Client.blazor")
-- When a ".blazor" file is requested change it to ".dll"
+- On client side, when we request a dll change the extension to blazor
+- On server siden When a ".blazor" file is requested change it to ".dll" so it matches the physical file name
 
 This is actually quite easy to do in ASPNET Core with the Url Rewriting engine which provides two ways of rewriting :
 - Changing an incoming request
@@ -117,12 +117,32 @@ iUH29wZPn5x80cwesCTDGMCRIDmn5f97H8eBN2u_lEXcesNX-ZIMyEI; CSRF-TOKEN=CfDJ8JBC_YjS
 
 I got a 200 with the good HTTP request headers :)
 
-## Changing the outgoing response
+## Changing on client side
 
-Now I need to change the blazor.boot.json file so it gives ".blazor" url instead of ".dll". I could do it at build time but I don't see any extension mechanism [here](https://github.com/aspnet/Blazor/blob/master/src/Microsoft.AspNetCore.Blazor.Build/Core/RuntimeDependenciesResolver.cs). So I'll use the rewriter for this task. I might consume ressources at runtime but it's not our problem now.
+Now I need to change the file name on client side so XHR to "myassembly.dll" becomes "myasembly.blazor". I need to do this so it's the more discrete possible, the extension ".dll" must be hard coded through most of the mono wasm and blazor code base. I tried to change the extension in the blazor.boot.json but my app could start. SO I chose to do so at the XHR level by overriding the used method "open" like this. I found out that it's the method used by Blazor by browsing it's source code.
 
-Here is my code for changing this file
+```js
 
-```cs
+XMLHttpRequest.prototype.open_before = XMLHttpRequest.prototype.open;
 
+XMLHttpRequest.prototype.open = function (method, url, async) {
+    if (url.endsWith(".dll")) {
+        url = url.replace("dll", "blazor");
+    }
+    return this.open_before(method, url, async);
+};
 ```
+
+- It's pretty basic js code, thanks to it's flexibilty, we can override nearly everything.
+
+And it works :) Here is my network tab now
+
+![Toss startup network tab](/images/Capture2.png "Toss startup network tab")
+
+## Conclusion
+
+This workaround is not a long term solution as I use non documented things and AV or Firewall might block because of the content of the downloaded files. But anyway it helps understanding how assembly loading works in Blazor and despite the lack of extension point on this we still can find solutions.
+
+## Reference
+- <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/url-rewriting?view=aspnetcore-2.1#when-to-use-url-rewriting-middleware>
+- <https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open>
