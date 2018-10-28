@@ -1,6 +1,6 @@
 # How to change Blazor dll file extension with ASPNET Core
 
-Blazor is a framework for executing livrary (.dll) targeting .net standard in the browser. When the app loads it get via xhr you application binaries. The problem is, in some internal network or for some AV providers, downloading .dll files is forbidden. We can see in this github issue that this is a problem for some people : https://github.com/aspnet/Blazor/issues/172. While I think this problem will be resolved by the ASPNET team before the first release (if there is one), in this blog post I'll show you how to workaround this issue with the existing tools already present in ASPNET Core.
+Blazor is a framework for executing library (.dll) targeting .net standard, in the browser. When the app loads it get via xhr your application binaries. The problem is, in some internal network or for some AV providers, downloading .dll files is forbidden. We can see in this github issue that this is a problem for some people : https://github.com/aspnet/Blazor/issues/172. While I think this problem will be resolved by the ASPNET team before the first release (if there is one), in this blog post I'll show you how to workaround this issue with the existing tools already present in ASPNET Core.
 
 ## What happens 
 
@@ -35,9 +35,9 @@ Your blazor index page looks like this
 ```
 - Everything in the <app> tag is for the splash screen
 - When blazor.webassembly.js is loaded 
-  - it downlaod a file called "blazor.boot.json" containing all the file you app needs  
+  - it downloads a file called "blazor.boot.json" containing all the file you app needs  
   - it downloads the mono wasms runtime
-  - it downloads your project's and dependencies dll from the previous json
+  - it downloads your project dll and dependencies dll from the previous json
   - and plug everything together (so far it's still magic to me but I might dig it for a future blog post)
 
 Here is the blazor.boot.json for my project Toss : 
@@ -82,16 +82,13 @@ And here is a screenshot of the Network tab during my app startup
 ![Toss startup network tab](/images/Capture.png "Toss startup network tab")
 
 What we need to do happens on step 2 and 3 :
-- On client side, when we request a dll change the extension to blazor
-- On server siden When a ".blazor" file is requested change it to ".dll" so it matches the physical file name
-
-This is actually quite easy to do in ASPNET Core with the Url Rewriting engine which provides two ways of rewriting :
-- Changing an incoming request
-- CHanging an outgoing response 
+- On client side, when we request a ".dll" change the extension to ".blazor"
+- On server siden when a ".blazor" file is requested change it to ".dll" so it matches the physical file name
 
 ## Changing the incoming request
 
 Here is the code for changing the incoming request
+
 ```cs
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
@@ -103,8 +100,8 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 }
 ```
 
-- I use the existing rewriting engine
-- Theregex is pretty simple, you can test yours here http://regexstorm.net/tester
+- I use the existing rewriting engine built-in ASPNET Core but you can use the on from your web server : nginx, apache, IIS ...
+- The regex is pretty simple, you can test yours here http://regexstorm.net/tester
 - For testing I just extracted the powershell for getting the first request from chrome dev tools and changed the extension :
 
 ```powershell
@@ -119,7 +116,7 @@ I got a 200 with the good HTTP request headers :)
 
 ## Changing on client side
 
-Now I need to change the file name on client side so XHR to "myassembly.dll" becomes "myasembly.blazor". I need to do this so it's the more discrete possible, the extension ".dll" must be hard coded through most of the mono wasm and blazor code base. I tried to change the extension in the blazor.boot.json but my app could start. SO I chose to do so at the XHR level by overriding the used method "open" like this. I found out that it's the method used by Blazor by browsing it's source code.
+Now I need to change the file name on client side so XHR to "myassembly.dll" becomes "myasembly.blazor". I need to do this so it's the more discrete possible, the extension because ".dll" must be hard coded through most of the mono wasm and blazor code base. I tried to change the extension in the blazor.boot.json but my app couldn't start. So I chose to do this at the XHR level by overriding the method used by Blazor in blazor.webassembly.js ([source code)[https://github.com/aspnet/Blazor/blob/master/src/Microsoft.AspNetCore.Blazor.Browser.JS/src/Platform/Mono/MonoPlatform.ts].
 
 ```js
 
