@@ -1,0 +1,12 @@
+# Setup a CI pipeline in Azure DevOps (VSTS) with CosmosDB Emulator, ASPNET Core and WebDriver
+In my project [Toss](https://github.com/RemiBou/Toss.Blazor) so far the challenge is more about integration with CosmosDB than complex business logic implementation so my esting strategy is more high level : integration and E2E. There is a challenge with this kind of test when you want to execute them from your CI pipeline as you must setup the whole environment without direct access to the system.
+
+The tool I'll be using for this is Azure DevOps, formerly known as Visual Studio Team Service. This tool changed a lot this past month as now we can setup the whole pipeline using file stored in our source control. In this blog post we'll see how to setup all the element together.
+
+## Setup pipeline
+
+This step is rather easy but still mandatory.
+
+For setting up a pipeline click on the + next to your project name and click on "New build pipeline". Here you'll have to choose your repo and choose a template so Azure DevOps will check it out (yeah) and read the yml definition and execute the pipeline.
+
+This pipeline is made of multiple steps which are thing executed by the computer (agent) running the pipeline, there is a lot of built-in tasks, you can find them here : <https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/index?view=vsts>.
