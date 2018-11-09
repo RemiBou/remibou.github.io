@@ -1,3 +1,9 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Azure DevOps, ASPNET Core, Cosmos DB]
+---
+
 # Setup a CI pipeline in Azure DevOps (VSTS) with CosmosDB Emulator, ASPNET Core
 In my project [Toss](https://github.com/RemiBou/Toss.Blazor) so far the challenge is more about integration with CosmosDB than complex business logic implementation so my testing strategy is more high level : integration and E2E. There is a challenge with this kind of test when you want to execute them from your CI pipeline as you must setup the whole environment without direct access to the system.
 
