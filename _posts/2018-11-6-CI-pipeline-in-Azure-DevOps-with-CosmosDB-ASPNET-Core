@@ -39,10 +39,35 @@ steps:
   inputs:
     version: 2.1.403
 ```
-- For finding the task name I use 
+- For finding the task name I use the GUI editor which propose a tool for seing the YML source corresponding to a step.
+- All the SDK versions are available here https://github.com/dotnet/core/blob/master/release-notes/releases.csv
 
 ## Build project
+Now we need to build our project, which is not very hard
+
+```yml
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build'
+ ```
+ 
+ - buildConfiguration refers to the variable defined on the previous part. I could have hard coded it
 
 ## Start CosmosDB Emulator
+For my integration test I need access to a CosmosDB server. For this I could have used a paying COsmosDB instance, but I'm cheap so I prefer to use CosmosDB Emulator.
+Before setting up the step you need to install the emulator on your Azure Devops account here : <https://marketplace.visualstudio.com/items?itemName=azure-cosmosdb.emulator-public-preview>
+
+Now the step
+
+```yml
+- task: azure-cosmosdb.emulator-public-preview.run-cosmosdbemulatorcontainer.CosmosDbEmulator@2
+  displayName: 'Run Azure Cosmos DB Emulator container'
+```
+
+- For finding the task name I used the GUI designer once again, because this is not documented anywhere.
+- There is no argument
+- This runs cosms db emulator on a container, so we'll need to find a way to pass the container host name to our test, this is the next step.
 
 ## Run integration tests
+
+My integration tests are xUnit tests
+
