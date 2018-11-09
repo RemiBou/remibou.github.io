@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [blazor]
+tags: [Blazor]
 ---
 
 # Implementing the observer pattern with Blazor
