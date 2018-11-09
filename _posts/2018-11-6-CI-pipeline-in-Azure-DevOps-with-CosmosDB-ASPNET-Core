@@ -69,5 +69,54 @@ Now the step
 
 ## Run integration tests
 
-My integration tests are xUnit tests
+My integration tests are xUnit tests. Here is my yml configuration for this step :
 
+```yml
+- script: dotnet test Toss.Tests\Toss.Tests.csproj  -v n
+  displayName: 'Tests'
+  env: { 'CosmosDBEndpoint': "$(CosmosDbEmulator.Endpoint)" }  # list of environment variables to add
+```
+
+- I force the project on dotnet test so it doesn't scan the full repo searching for test assembly (and dotnet test output is already a nightmare, if we can reduce it a bit it's not bad)
+- "-v n" is for debugging purpose, I needed to console.WriteLine a few things
+- the environement variable setting is for apssing the cosmosDB host name to the test
+- $(CosmosDbEmulator.Endpoint) is set by the previous step
+
+I read the environement variable like this 
+
+```cs
+var dict = new Dictionary<string, string>
+  {
+       { "GoogleClientId", ""},
+       { "GoogleClientSecret", ""},
+       { "MailJetApiKey", ""},
+       { "MailJetApiSecret", ""},
+       { "MailJetSender", ""},
+       { "CosmosDBEndpoint", "https://localhost:8081"},
+       { "CosmosDBKey", "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="},
+       { "StripeSecretKey", ""},
+      {"test","true" },
+      {"dataBaseName",DataBaseName }
+  };
+
+  var config = new ConfigurationBuilder()
+      .AddInMemoryCollection(dict)
+      .AddEnvironmentVariables()
+      .Build();
+   var startup = new Startup(config);
+```
+- The environment variable will override the localhost setting if it's set
+- The cosmosDBbKey for the emulator is always the same, lucky us :)
+
+## Results
+
+You can see my tests running fine here : <https://dev.azure.com/remibou/toss/_build/results?buildId=23&view=logs> (I need to fix the E2E tests, it'll be for an other log post).
+
+## Conclusion
+
+It's not very hard to setup, but as always with code oriented configuration, the discovery is hard if there is not enough tools / documentation. Here I had to find the task names using the GUI editor, hopefully a new VS addin will connect Azure DevOps account and yml editor for providing intellisens (in 10 years).
+
+## Reference
+- <https://docs.microsoft.com/en-us/azure/devops/pipelines/targets/cosmos-db?view=vsts>
+- <https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=vsts&tabs=schema>
+- <https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects>
