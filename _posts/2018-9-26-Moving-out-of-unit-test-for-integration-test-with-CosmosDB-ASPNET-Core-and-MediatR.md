@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [tests, mediatr, aspnetcore, cosmodb]
+tags: [Tests, MediatR, ASPNET Core, Cosmos DB]
 ---
 
 # Moving from unit test to integration/system test 
