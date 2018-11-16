@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Azure DevOps, ASPNET Core, Cosmos DB, Selenium Web Driver]
+---
 # Setup an Azure DevOps CI pipeline with E2E tests against a ASPNET Core server
 In my project Toss, I have classic Unit / Integration test but also end-to-end tests with Selenium WebDriver. I need those test for 2 reasons :
 - You always need them :) Because it's the last step of integration, and you can't think of all the things that could go wrong when you write your unit / integration tests. Here you are 99% sure that the basic usage of your app is not broken by a build.
