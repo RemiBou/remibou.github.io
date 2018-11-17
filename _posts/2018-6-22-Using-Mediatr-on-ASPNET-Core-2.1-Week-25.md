@@ -6,7 +6,7 @@ tags: [Blazor, MediatR, ASPNET Core]
 # Using Mediatr on ASPNET Core 2.1
 
 ## CQRS
-CQRS means Command and Query Relationship Seggregation. This is a design pattern or a development practice on which you split your domain in 2 parts : the write and the read model.
+CQRS means Command and Query Responsibility Seggregation. This is a design pattern or a development practice on which you split your domain in 2 parts : the write and the read model.
 
 ### The write model (commands)
 This is where all the update/insert/delete occurs. A command has a durable impact on the system, it changes the system state. Most of the time this part is the most complex as you'll have most the business logic and the classes are the most complex.
