@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor,ASPNET Core,MediatR, JSInterop]
+---
 # How to validate incoming command with reCaptcha on a Blazor app with a ASPNET Core backend with MediatR
 The [Toss project](https://github.com/RemiBou/Toss.Blazor) is a message board : people register and then they send messages. One of the threat with this kind of application are robot : people creates program that creates new account and then post spam message. 
 
