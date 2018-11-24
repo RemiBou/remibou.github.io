@@ -156,7 +156,7 @@ public class CaptchaValidator : ICaptchaValidator
 ```
 - we need to send the client IP
 - secret is a ... secret and is defined in my secrets.json, you can find it on your reCaptcha GUI
-- here I just parse the resulting json and see if the token is ok, if it's not then I raise an Exception. I cold have returned a boolean, but this case is not supposed to happen beucase I only want human on my app.
+- here I just parse the resulting json and see if the token is ok, if it's not then I raise an Exception. I could have returned a boolean, but this case is not supposed to happen beucase I only want human on my app.
 
 And for injecting this service I do it like that on my ConfigureServices
 
@@ -179,15 +179,15 @@ services.AddScoped(typeof(IPipelineBehavior<, >), typeof(CaptchaMediatRAdapter<,
 Now everything is bootstraped :
 - A NotARobot is detected on client side and we try to get a token (this fails if the user is not a human)
 - The token is send on the command payload
-- MeditR executes the pipeline if the command inherit from NotARobot
+- MediatR executes the pipeline if the command inherit from NotARobot
 - The validation will fail if the token is not correct 
 - My command get executed if reCaptcha doesn't think it's a robot.
 
 ## E2E tests
 
-Now my E2E tests are failing because WebDrive is a robot :(. 
+Now my E2E tests are failing because Selenium WebDriver is a robot :(. 
 
-I need to change the two validation process, on the client-side and server side.
+I need to change the two validation process : on the client-side and server side.
 
 On the client side, my test executes the following script
 
@@ -223,7 +223,7 @@ public class FakeCaptchaValidator : ICaptchaValidator
 - with NextResult in my FakeCaptchaValidator I can validate that my process fails when the captcha validation fails
 
 ## Conclusion
-In this article we saw again two major advantage of Blazor : the code sharing between client and server and the js interoperability which enables you to use any existing javascript api.
+In this article we saw again two major advantages of Blazor : the code sharing between client and server and the js interoperability which enables you to use any existing javascript api.
 
 ## References
 - <https://github.com/jbogard/MediatR/wiki/Behaviors>
