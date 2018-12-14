@@ -88,9 +88,9 @@ steps:
     publishFeedCredentials: 'Nuget'
 ```
 
-- I had to rename my project from Blazor.RemiBou.DataAnnotation to RemiBou.Blazor.DataAnnotation because Microsft reserved the prefix "Blazor." (error "409 This package ID has been reserved...").
+- I had to rename my project from Blazor.RemiBou.DataAnnotation to RemiBou.Blazor.DataAnnotation because Microsoft reserved the prefix "Blazor." (error "409 This package ID has been reserved...").
 - I have to update nuget because the runner uses the 4.1 and we need 4.8 for sending a net standard package (error " Unable to cast object of type 'System.String' to type 'NuGet.Frameworks.NuGetFramework")
-- I use byPrereleaseNumber so every time I push a commit to my master branch a new version is created as pre-release. I'll see later if this package needs release.
+- I use "byPrereleaseNumber" so every time I push a commit to my master branch a new version number is created as pre-release. I'll see later if this package needs release.
 - I use dotnet pack because nuget pack wouldn't read well the csproj and ignore the dependencies.
 - I use nuget push instead of dotnet push because dotnet push doesn't work with Service connections in Azure DevOps (error "DotNetCore currently does not support using an encrypted Api Key.")
 
