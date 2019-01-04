@@ -46,15 +46,13 @@ const readUploadedFileAsText = (inputFile) => {
     });
 };
 Blazor.registerFunction("getFileData", function (inputFile) {
-    var expr = "#" + inputFile.replace(/"/g, '');
-    return readUploadedFileAsText($(expr)[0]);
+   
+    return readUploadedFileAsText(inputFile);
 });
 ```
 
-- I have to do this weird replace as there is a bug in Blazor regarding async js interop calls (instead of passing "inputFile" it passes ""inputfile""))
 - I use a promise as we can't read file synchronously in js and Blazor needs a Promise for calling async js method
 - This code is greatly inspired by <https://blog.shovonhasan.com/using-promises-with-filereader/>, it helped because I find it very hard to understand promise.
-- we could easily remove the jquery dependency
 - readAsDataURL appends information to the file base64, so we have to split it and get the 2nd part
 
 ### Blazor JS Interop
