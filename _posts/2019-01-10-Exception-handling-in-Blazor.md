@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [Blazor, Visual Studio]
+tags: [Blazor]
 ---
 # Handling Exception in Blazor
 Like in every part of your system, on the front-end part you should take care of exceptions. Like its name says : it should not happen. But we are not perfect and they happen because of a lot of reasons. For now exceptions that happens in Blazor are sent to the browser console. But we might need more than that : display it on the web page or even send it to our backend for alerting the team that something went wrong.
