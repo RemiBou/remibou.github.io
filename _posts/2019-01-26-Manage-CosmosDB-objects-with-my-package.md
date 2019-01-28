@@ -96,3 +96,24 @@ internal class TriggerMigrationStrategy : IMigrationStrategy
     }
 }
 ```
+
+- For the triggers I need more information than the name : the type and the operation, so I created an other convention for setting those on the file name : {Type}-{Operation}-{Name}
+
+## Using the library
+
+For using the library you need to :
+- Install the package "Install-Package RemiBou.CosmosDB.Migration -Version 0.0.0-CI-20190126-145359" (it's still a pre release, I'll try o have a better versionning strategy later).
+- create the folders "CosmosDB" and "CosmosDB/Migrations"
+- Add "<EmbeddedResource Include="CosmosDB\Migrations\**\*.js" />" to your project csproj
+- Add your migration respecting the convention
+- Add this code when you want to run the migrations (I guess on App Startup.)
+```cs 
+await new CosmosDBMigration(documentClient).MigrateAsync(this.GetType().Assembly);// add .Wait() if your are in a not in an async context like the Startup
+```
+- Run your app
+
+I'll try to automate the step 2 and 3 when installing the package.
+
+## Conclusion
+
+This package was fun to build and design and I think I got something nice. Now I have many features to do ([read here the todo list](https://github.com/RemiBou/RemiBou.CosmosDB.Migration)), but before that I have to setup the test suite so the user will be reassured that the package is stable. 
