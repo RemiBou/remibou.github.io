@@ -1,23 +1,23 @@
 # Manage CosmosDB objects (Stored Procedure, Functions, Triggers ...) with this Nuget package
 
-In my Toss project I decided to use CosmosDB as the main data store. Document oriented Database are fun to work with as have to change the way you see data and processing comapred to relationnal database. NoSQL database are often badly framed as "schemaless", (but there isn't such thing as schemaless)[https://martinfowler.com/articles/schemaless/], the schema is just defined elsewhere : not on the database system but on your code.
+In my Toss project I decided to use CosmosDB as the main data store. Document oriented Database are fun to work with as you have to change the way you see data and processing compared to relationnal database. NoSQL database are often badly framed as "schemaless", [but there isn't such thing as schemaless](https://martinfowler.com/articles/schemaless/), the schema is just defined elsewhere : not on the database but on your application code.
 
-There is 2 problem with this approach for the developer :
-- the persistence is managed by still the database so you have to think how to change the saved data when you are renaming a field for example
-- there is some specific database object such as functions and triggers that need to be defined 
+There are 2 problems with this approach for the developer :
+- the data are persisted, so when you change your schema (property rename), you have to think of the existing data
+- there is some specific database object such as functions and triggers that needs to be defined somewhere
 
-That's why I created this package, it'll help you to manage your database object and schema evolution along with your on your repository and it'll be applied when you want (on app startup mostly).
+That's why I created this package, it'll help you to manage your database object and schema evolution along with your application code on your repository and it'll be applied when you want (on app startup mostly).
 
 ## Reading he embedded ressources
 
 I chose to use embedded js file in assembly for defining objets definitions :
-- Because they are defined in javascript, it's better to use js file, the IDE will help the developer
+- Because they are defined in javascript it's better to use .js file, the IDE will help the developer
 - If it's embedded then the package user won't have to think about securing the folder containing the definitions
 
 Reading the embedded ressource is fairly simple in C# / netstandard :
 
 ```cs
-//read all the migration embed in CosmosDB/Migrations
+//read all the migration embbeded in CosmosDB/Migrations
 var ressources = migrationAssembly.GetManifestResourceNames()
     .Where(r => r.Contains(".CosmosDB.Migrations.") && r.EndsWith(".js"))
     .OrderBy(r => r)
@@ -37,7 +37,7 @@ foreach (var migration in ressources)
 }
 ```
 
-- migrationAssembly is sent as a parameter of my method, so the user can add its migration to the app ressources or to a library ressources.
+- migrationAssembly is sent as a parameter of my method, so the user can add its migrations to the app ressources or to a library ressources.
 - I don't really think about performance here as this code is supposed to be ran only once per app lifecycle, so I prefer to keep it clear.
 
 ## Applying the migrations
@@ -63,12 +63,12 @@ if (parsedMigration.Collection != null)
 await strategy.ApplyMigrationAsync(client, parsedMigration, migrationContent);
 ```
 
-- Parsed migration is the class that check and read the ressource name. Each ressource must respect the documented convention : the "Test.js" file located in "CosmosDB/Migrations/TestDataBase/StoredProcedure/" is the content of the stored procedure called "Test" located in the database "TestDataBase" and in the collection
-- Here I create the required database and collection
+- Parsed migration is the class that checks and reads the ressource name. Each ressource must respect the documented convention : the "Test.js" file located in "CosmosDB/Migrations/TestDataBase/StoredProcedure/" is the content of the stored procedure called "Test" located in the database "TestDataBase" and in the collection
+- Here I also create the required database and collection
 
 ## Strategy implementation
 
-For each kind of object I want to manager I have to create an implementation of the strategy, here is the one for the triggers :
+For each kind of object I want to handle I have to create an implementation of the strategy, here is the one for the triggers :
 
 ```cs 
 internal class TriggerMigrationStrategy : IMigrationStrategy
@@ -112,8 +112,8 @@ await new CosmosDBMigration(documentClient).MigrateAsync(this.GetType().Assembly
 ```
 - Run your app
 
-I'll try to automate the step 2 and 3 when installing the package.
+I'll try later to automate the step 2 and 3 when installing the package.
 
 ## Conclusion
 
-This package was fun to build and design and I think I got something nice. Now I have many features to do ([read here the todo list](https://github.com/RemiBou/RemiBou.CosmosDB.Migration)), but before that I have to setup the test suite so the user will be reassured that the package is stable. 
+This package was fun to build and design and I think I got something nice. Now I have many features to do [read here the todo list](https://github.com/RemiBou/RemiBou.CosmosDB.Migration)), but before that I have to setup the test suite so the user will be reassured that the package is stable. 
