@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor]
+---
 # How to configure a Blazor application
 Most of the applications we build need some kind of configuration : connection string, production or not, api key ... Client side app are not different, although what you'll store in the configuration must be less sensible as the client will have access to it. In this blog post I'll explain how I setup my Blazor project for accessing the different configuration needed in the different environment.
 
