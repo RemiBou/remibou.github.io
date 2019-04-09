@@ -1,3 +1,8 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [CosmosDB, Nuget]
+---
 # Manage CosmosDB objects (Stored Procedure, Functions, Triggers ...) with this Nuget package
 
 In my Toss project I decided to use CosmosDB as the main data store. Document oriented Database are fun to work with as have to change the way you see data and processing comapred to relationnal database. NoSQL database are often badly framed as "schemaless", (but there isn't such thing as schemaless)[https://martinfowler.com/articles/schemaless/], the schema is just defined elsewhere : not on the database system but on your code.
