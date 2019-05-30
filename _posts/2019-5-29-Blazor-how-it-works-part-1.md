@@ -6,7 +6,7 @@ I am starting a post serie about Blazor internal. I will try to find out how Bla
 In this first post I will try to figure out what happens after we enter "dotnet build" on a Blazor project and how C# class are generated from razor files.
 
 ## dotnet cli
-The dotnet cli source code is located [here](https://github.com/dotnet/cli/blob/master/src/dotnet/Program.cs). When we enter "dotnet build", the dotnet program looks for a "build" in its [internal command catalog](https://github.com/dotnet/cli/blob/master/src/dotnet/BuiltInCommandsCatalog.cs) (this enables devellopers to add other command to the catalog).
+The dotnet cli source code is located [here](https://github.com/dotnet/cli/blob/master/src/dotnet/Program.cs). When we enter "dotnet build", the dotnet program looks for a "build" in its [internal command catalog](https://github.com/dotnet/cli/blob/master/src/dotnet/BuiltInCommandsCatalog.cs) (this enables developpers to add other command to the catalog).
 
 The [BuildCommand](https://github.com/dotnet/cli/tree/master/src/dotnet/commands/dotnet-build) inherit from [MSBuildForwardingApp](https://github.com/dotnet/cli/blob/master/src/dotnet/commands/dotnet-msbuild/MSBuildForwardingApp.cs) which uses [MSBuildForwardingAppWithoutLogging](https://github.com/dotnet/cli/blob/95c6eff6daa1a69f29c42b2d405400ad44bdec91/src/Microsoft.DotNet.Cli.Utils/MSBuildForwardingAppWithoutLogging.cs). This class will then generate a command line for executing MsBuild with the good arguments. As I found out with [procexp](https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer) the command looks like this
 
