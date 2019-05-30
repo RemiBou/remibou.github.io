@@ -1,3 +1,9 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor,ASPNET Core,Blazor internals serie]
+---
+
 # How does Blazor works ? Part 1 : building class from .razor
 _I started this blog one year ago, I am proud to say that I published 22 blog posts, it's one every 2.5 weeks, which is a bit under my first goal of one every 2 weeks, but it's ok. I now have a bit less than 3000 visitors per month, I guess it's not a lot, but it's enough to keep me going._
 
