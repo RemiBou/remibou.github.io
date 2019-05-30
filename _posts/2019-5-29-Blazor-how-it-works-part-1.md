@@ -1,7 +1,7 @@
 # How does Blazor works ? Part 1 : building class from .razor
 _I started this blog one year ago, I am proud to say that I published 22 blog posts, it's one every 2.5 weeks, which is a bit under my first goal of one every 2 weeks, but it's ok. I now have a bit less than 3000 visitors per month, I guess it's not a lot, but it's enough to keep me going._
 
-I am starting a post serie about Blazor. I intend to try to find out how Blazor works, from how a project is build to the refreshing of the UI. While I will focus on Blazor client-side, some of this can be applied to Blazor server-side as well (most of the build process and rendering logic). In this serie I'll learn as I write the post, trying to figure out how the code works. I will try to add references and code sample from Microsoft repositories. If you think that my understanding is wrong, please add a comment, and I'll fix the post.
+I am starting a post serie about Blazor internal. I will try to find out how Blazor works, how a project is build, how is it loading on the browser, how is the UI updated ... While I will focus on Blazor client-side, some of this can be applied to Blazor server-side as well (most of the build process and rendering logic). In this serie I'll learn as I write the post, trying to figure out how the code works. I will try to add references and code sample from Microsoft repositories. If you think that my understanding is wrong, please add a comment, and I'll fix the post.
 
 In this first post I will try to figure out what happens after we enter "dotnet build" on a Blazor project and how C# class are generated from razor files.
 
