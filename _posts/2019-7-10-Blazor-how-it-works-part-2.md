@@ -19,7 +19,6 @@ For writing the first blog post I started from the output of the "dotnet build" 
   - _BlazorResolveOutputBinaries
   - _ResolveBlazorBootJsonInputs
   - _GenerateBlazorBootJson
-  - PrepareBlazorOutputs
   - _BlazorCopyFilesToOutputDirectory
   - _BlazorBuildReport
 
@@ -76,7 +75,7 @@ This file looks like this
 </linker>
 ```
 
-It is just the full name of the generated assembly.
+It is just the full name of the generated assembly. 
 
 ## _CollectBlazorLinkerDescriptors
 This task creates a file (\obj\Debug\netstandard2.0\blazor\inputs.linker.cache) with a hash of all the dependant assemblies and the linker settings. At some point I don't understand why they need all these files with hash, it seems that the hash in inputs.basic.cache is nearly about the same thing. But I must be wrong :)
@@ -86,7 +85,38 @@ This task creates a file (\obj\Debug\netstandard2.0\blazor\inputs.linker.cache) 
 This is where the "linker" is called. First it gather the project assembly file name, its dependencies and the BCL (base class library, it cntains the basic class for the runtime such as DateTime, String or File). Then it calls the linker with a command like this
 
 ```cmd
-dotnet ${Blazor.Mono path}/tools/illink/illink.dll {all the parameters such as settings or assemblies}
+dotnet ${Blazor.Mono path}/tools/illink/illink.dll {path to previously created XML with assemblyname} {path to output directory blazor/linker}
 ```
 
-The linker source code is defined here (https://github.com/mono/linker)
+The linker source code is defined here (https://github.com/mono/linker). The readme says all about it "The IL Linker is a tool one can use to only ship the minimal possible IL code and metadata that a set of programs might require to run as opposed to the full libraries.". As per the documentation the linking process is quite simple :
+- It loads all the types, fields, method from the given context (assembly)
+- For all of them and the other elments they are using recursively it'll decide how to annotate it : linked or not, to be processed or not.
+- Then depending on the previous decision some element (types, method ...) will be removed
+- Then new assemblies will be created based on this decision
+I think this is a bit like tree-shaking in angular/node projects.
+
+## _BlazorResolveOutputBinaries
+This task consist of 2 other tasks : _CollectLinkerOutputs or _CollectResolvedAssemblies
+
+_CollectLinkerOutputs assembly list from the linker output, and create their target path in "bin\Debug\netstandard2.0\dist\_framework\_bin".
+
+_CollectResolvedAssemblies is the same as _CollectLinkerOutputs but runs only if the linker is disabled and reads the assembly list from the depencency list.
+
+## _ResolveBlazorBootJsonInputs
+This task writes a bunch of settings (configuration, assembly and pdb paths, linker enabed, debug enabled) to a text file in "obj\Debug\netstandard2.0\blazor\input.bootjson.cache".
+
+## _GenerateBlazorBootJson
+This task writes (again) a bunch of file with assembly and pdb path. I think I can find at least 10 file with dll path in this build process :). Then it calls [this Program](https://github.com/aspnet/AspNetCore/blob/master/src/Components/Blazor/Build/src/Cli/Program.cs) with the first parameter "write-boot-json". This parameter causes the execution of [this command](https://github.com/aspnet/AspNetCore/blob/master/src/Components/Blazor/Build/src/Cli/Commands/WriteBootJsonCommand.cs) which reads the file input and creates the json file in "obj\Debug\netstandard2.0\blazor"
+
+## _BlazorCopyFilesToOutputDirectory
+This step is pretty straightforward : during the whole build process a variable called BlazorItemOuput was filled with a source file and a destination. This task reads this variable and then copies the source file to the destination, mostly from obj to bin. This is used for keeping only the file usefull at runtime from the obj folder.
+
+
+## _BlazorBuildReport
+This task displays the number of file copied previously and list all the said files.
+
+# Conclusion
+This article was fun to write because it helps understand what is going on in Microsoft people head. It's also nice for understanding a bit more about the building process in all the .net project. 
+
+It can also be helpful for debugging stuff when you have an error with sdk / target files or something. 
+And maybe it'll be a starting point for people looking for extension point in this (changing dll extension ?).
