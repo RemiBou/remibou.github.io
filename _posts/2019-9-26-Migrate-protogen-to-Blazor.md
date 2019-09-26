@@ -1,6 +1,6 @@
 # How I migrated protogen to Blazor
 
-Protogen (https://protogen.marcgravell.com/) is a web app for working with the serialization format protobuf. It provides two features :
+[Protogen](https://protogen.marcgravell.com/) is a web app for working with the serialization format protobuf. It provides two features :
   - Generating code from .proto file (which describes data structure and API)
   - Reading serialized data (binary) and displaying it in a human readable form
 
@@ -84,7 +84,7 @@ Once this was done, the POC was working nicely, so I decided to move on and fini
 
 ## Architecture
 
-I decided to go for a classic ASPNET Core API that would host my Blazor CLient side app because I still needed a little API, and that would keep the deployment simple as it is now (I guess Marc does a right-click publish from his Visual Studio as there is no pipeline defined on the repo).
+I decided to go for a classic ASPNET Core API that would host my Blazor client side app because I still needed a little API, and that would keep the deployment as simple as it is now (I guess Marc does a right-click publish from  Visual Studio as there is no pipeline defined on the repo).
 
 I kept the existing protogen.site project and created a protogen.site.blazor.client besides it. I had to add the reference to the blazor project from the server project :
 
