@@ -130,7 +130,7 @@ Now that my two projects are working correctly together I need to create the fir
 
 The code generation is pretty simple : you have a .proto file as input, you choose the language and it creates the code files you need, here is a screenshot of what it looks like at the end :
 
-![Protogen generator](/assets/img/protogen_generator.PNG "Protogen generator")
+![Protogen generator](/assets/img/protogen_generator.png "Protogen generator")
 
 For the layout I tried to do like other online code generator : split screen with syntax highlight (more on this later).
 
@@ -295,7 +295,7 @@ The nice thing with Blazor is that I can send my view model instance to the serv
 
 ## Monaco integration
 
-In the previous version of protogen there was a code editor called "monaco" that was integrated. Monaco is the code editor part of visual studio and can be used standalone on a web page. Integrating monaco was not easy because I needed to learn how to enable it and then how to enable the two way binding between my view model string property and monaco.
+In the previous version of protogen there was a code editor called "(monaco)[https://microsoft.github.io/monaco-editor/]" that was integrated. Monaco is the code editor part of VSCode and can be used standalone on a web page. Integrating monaco was not easy because I needed to learn how to enable it and then how to enable the two way binding between my view model string property and monaco.
 
 When doing this kind of project I prefer to use CDN resources for js library. Mostly because it removes the pain of dealing with npm or other mess like bower or webpack and because someone must be paying for this bandwidth and I prefer when it's someone else. Here is the code for initializing monaco from a cdn
 
@@ -447,8 +447,8 @@ private string _content;
     }
 ```
 
-- If you want to handle two way binding with a custom component, you must add a Parameter of type EventCallBack<XX> name "MyFieldChanged" where XX is the bounded field typeand MyField is the name of the parameter and then call the method "InvokeASYNC3 on this instance when the value changes
-- I had to handle AN infinite loop because calling the callback would execute a set on my property which would then call the set of "Content" which would then change the monaco editor value which would then trigger onDidChangeContent ....
+- If you want to handle two way binding with a custom component, you must add a Parameter of type EventCallBack&lt;XX&gt; named "MyFieldChanged" where XX is the parameter type and MyField is the name of the parameter and then call the method "InvokeAsync" on this instance when the value changes
+- I had to handle an infinite loop because calling the callback would execute a set on my property which would then call the set of "Content" which would then change the monaco editor value which would then trigger onDidChangeContent ....
 
 This code was long to create because I never done it, and the debug experience is not optimal when dealing with jsinterop. A lot of console.log and Console.WriteLine were done :p
 
@@ -566,7 +566,7 @@ The two way binding is useless here as it's readonly but display the code with s
 ## Binary parser
 The second part of protogen is the binary parser, here is what it looks like now
 
-![Protogen Parser](/assets/img/Protogen_parser.PNG "Protogen Parser")
+![Protogen Parser](/assets/img/protogen_parser.png "Protogen Parser")
 
 There is not much to say about the parser but :
 - At first I used my code from a previous blog post for file reading, but it was slow. So I decided to use the [InputFile from Steve Sanderson](https://blog.stevensanderson.com/2019/09/13/blazor-inputfile/) (one of the person at the origin of Blazor) which is waaaaay better.
