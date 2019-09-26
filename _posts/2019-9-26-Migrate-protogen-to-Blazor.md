@@ -1,3 +1,9 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor,ASPNET Core]
+---
+
 # How I migrated protogen to Blazor
 
 [Protogen](https://protogen.marcgravell.com/) is a web app for working with the serialization format protobuf. It provides two features :
