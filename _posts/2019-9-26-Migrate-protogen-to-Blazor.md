@@ -289,7 +289,7 @@ I tried to implement most of the logic here for keeping the razor part of my vie
 
 The rest of the generation razor file can be found [here](https://github.com/RemiBou/protobuf-net/blob/protobufgen-blazor/src/protogen.site.blazor.client/Pages/Index.razor).
 
-I implemented on this page the decision wether I call the server or not : I call the server for every non .net language but also for .net languages when there is an include in the .proto file because protogen has some usual include available on server side and, because there is no abstraction over the file system access, I couldn't run it on client side where there is no file system :(.
+I implemented on this page the decision whether I call the server or not : I call the server for every non .net language but also for .net languages when there is an include in the .proto file because protogen has some usual include available on server side and, because there is no abstraction over the file system access, I couldn't run it on client side where there is no file system :(.
 
 The nice thing with Blazor is that I can send my view model instance to the server (serialized as Json) and call the same method on the client and the server, which reduce code duplication / translation (when you implement the same thing in js and in cs).
 
