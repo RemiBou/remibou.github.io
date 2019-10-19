@@ -1,3 +1,9 @@
+---
+layout: post
+feature-img: "assets/img/pexels/circuit.jpeg"
+tags: [Blazor,Tests,RavenDB,Cypress,AzureDevOps]
+---
+
 # How to do en-to-end tests with Cypress on a Blazor app using Docker Compose
 On my [Toss project](https://github.com/RemiBou/Toss.Blazor), I chose to have some end-to-end (e2e). En-to-end teston web project are test that automate a browsing session on a web browser. Most of the time it works by using API provided by an existing browser (like chrome). Those kind of tests have many drawbacks :
 - Force you to add ids everywhere on your html code so you can find element on your test code
