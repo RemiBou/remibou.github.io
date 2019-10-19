@@ -12,7 +12,7 @@ On my [Toss project](https://github.com/RemiBou/Toss.Blazor), I chose to have so
 
 But they are important for making sure that your app works and you don't have a huge error when your app startup because you miss a js reference or something else.
 
-At first I started my tests with Selenium. Mainly because it's the most common way to do this and because there was some example on the aspnet core repo. But Selenium test are hard to write and very flaky (just look at my [git logs](https://github.com/RemiBou/Toss.Blazor/commits/master)) for many reason :
+At first I started my tests with Selenium. Mainly because it's the most common way to do this and because there was some example on the aspnet core repo. But Selenium test are hard to write and very flaky (just look at my [git logs](https://github.com/RemiBou/Toss.Blazor/commits/master)) for many reasons :
 - An element must be displayed on the screen for accepting interaction, so you must code the scrolling up/down, size screen etc ...
 - You can only use the browser like a normal user so you can't add code for waiting the end of an http query or check the status of a xhr.
 - There isn't much debugging information provided : screenshot are hard to get and videos impossible.
