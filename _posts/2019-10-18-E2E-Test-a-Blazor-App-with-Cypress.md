@@ -4,7 +4,7 @@ feature-img: "assets/img/pexels/circuit.jpeg"
 tags: [Blazor,Tests,RavenDB,Cypress,AzureDevOps]
 ---
 
-# How to do en-to-end tests with Cypress on a Blazor app using Docker Compose
+# How to do en-to-end tests with Cypress on a Blazor app using docker-compose
 On my [Toss project](https://github.com/RemiBou/Toss.Blazor), I chose to have some end-to-end (e2e). End-to-end test on web project are tests that automate a browsing session on a web browser. Most of the time it works by using API provided by an existing browser (like chrome). Those kind of tests have many drawbacks :
 - Force you to add ids everywhere on your html code so you can find element on your test code
 - Are often flaky because some load time might vary between two test run or you can change your front-end code without thinking about the changes needed in the test
@@ -12,7 +12,7 @@ On my [Toss project](https://github.com/RemiBou/Toss.Blazor), I chose to have so
 
 But they are important for making sure that your app works and you don't have a huge error when your app startup because you miss a js reference or something else.
 
-At first I started my tests with Selenium. Mainly because it's the most common way to do this and because there was some example on the aspnet core repo. But Selenium test are hard to write and very flaky (just look at my [git logs](https://github.com/RemiBou/Toss.Blazor/commits/master)) for many reasons :
+At first I started my tests with Selenium. Mainly because it's the most common way to do this and because there was some example on the aspnet core repo. But Selenium tests are hard to write and very flaky (just look at my [git logs](https://github.com/RemiBou/Toss.Blazor/commits/master)) for many reasons :
 - An element must be displayed on the screen before accepting interactions, so you must code the scrolling up/down, size screen etc ...
 - You can only use the browser like a normal user so you can't add code for waiting the end of an http query or check the status of a xhr.
 - There isn't much debugging information provided : screenshot are hard to get and videos impossible.
@@ -21,8 +21,8 @@ I heard a lot of good thing about [cypress](https://www.cypress.io/) so I decide
 
 ## Start the application and dependencies
 
-Because my E2E test were done with Selenium it was a .net project, so I was able to launch RavenEB.Embedded. Cypress running on the browser runtime, I will get rid of this project, so I decided to use docker-compose. 
-I really like docker and using docker-compose for running E2E tests seems like a good idea. For running my app in a docker compose I need to build a docker image for it, here it is :
+Because my previous E2E test used Selenium it was a .NET Core project. This was usefull for launching  RavenEB.Embedded. Cypress running on the browser runtime, I won't have this project anymore. I needed an other way for starting my ravendb server : so I picked docker-compose, which I could use for starting my whole system : my app and the dependencies. 
+I really like docker and using docker-compose for running E2E tests seems like a good idea. For running my app in a docker-compose I need to build a docker image for it, here it is :
 
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2.7-alpine as runtime227
@@ -50,9 +50,9 @@ COPY --from=build /app .
 EXPOSE 80
 ENTRYPOINT ["dotnet", "Toss.Server.dll"]
 ```
- - We can see a really nice feature of Docker : I was able to import the 2.2.7 runtime into a 3.0 sdk docker image because my integration test runs RavenDB.Embedded which is not compatible with runtime 3.
- - With multi stage build I can use the sdk for building my app then only the runtime for executing it which will make my docker image smaller
- - I first copy the csproj and sln files for using layer caching : if I don't change anything to my csproj files, then the "RUN dotnet restore ./Toss.sln" line will use the cached version making my build faster.
+ - We can see a really nice feature of Docker : I was able to import the 2.2.7 runtime into a 3.0 sdk docker image . I needed this because my integration tests runs RavenDB.Embedded which is not compatible with runtime 3.
+ - With multi stage build I can use the sdk for building my app then only the runtime for executing it which will make my final docker image smaller
+ - I first copy the csproj and sln files for optimizing layer caching : if I don't change anything to my csproj files, then the "RUN dotnet restore ./Toss.sln" line will use the cached version of this layer, making my build faster (even though Azure DevOps doesn't provide docker layer caching yet).
  - "RUN dotnet test ./Toss.Tests" runs my integration tests, not the E2E. 
 
 Then I need to create a docker-compose file describing my app and its dependencies :
@@ -82,8 +82,8 @@ services:
     image: ravendb/ravendb
 ```
 - I expose the port 80 so I can access the app in my dev computer
-- "test=true" tells my app to use fake dependencies for things like external service (mailjet, stripe) or non deterministic data (random, datetime.now)
-- The good thing with docker compose is that they run on their own network with service accessible via their name, so I can run ravendb inside this network and it won't have an impact on the other ravendb I might be running on my dev computer.
+- "test=true" tells my app to use fake dependencies for things like external services (mailjet, stripe) or non deterministic data (random, datetime.now)
+- The good thing with docker-compose is that the services run on their own network and are accessible inside this network accessible via their name, so I can run ravendb inside this network and it won't have an impact on the other ravendb I might be running on my dev computer.
 
 Now I can run my app with the following command :
 
@@ -197,7 +197,7 @@ function disableCaptcha() {
 ```
 
 - Cypress uses mocha for running the tests, so your test fixture must be a call to "describe()" function and inside each test there is multiple calls to a "it" function. As in every test runner, there are hooks for running things before/after each/every tests.
-- Cypress is able to read every XHR request done by your site, but Blazor uses fetch for http call. Se need to remove the current implementation of fetch and replace it by a polyfill that uses xhr.
+- Cypress is able to read every XHR request done by your site, but Blazor uses fetch for http call. We need to remove the current implementation of fetch and replace it by a polyfill that uses xhr.
 - We can see with the route() and wait() call how you can wait until an http request is done and how we can read its content : here I needed a way to get the confirmation link after a subscribtion, so server side I send this link in the http response header (only in test mode) and I read it on client side and then visit() the link.
 - For E2E I prefer to write one big test that does a lot of thing, it's just a mater of taste. I don't practice TDD with E2E test it would be too hard, I prefer to create it when the development is done just for making sure it will keep working after my future updates.
 - The method disableCaptcha is used for disabling recaptcha. Be careful here, I create the method with a "new win.Function" for a specific reason. When you do interop C# -> js, Microsoft.JSINterop (used by Blazor) [check that the argument send is a function](https://github.com/aspnet/Extensions/blob/master/src/JSInterop/Microsoft.JSInterop.JS/src/src/Microsoft.JSInterop.ts) with this code
@@ -222,7 +222,7 @@ Now for testing this I cd on the test directory and enter
 
 Which opens a web UI where I can run my test and see them while they are executing. This GUI is really nice because you can go in the past and see the state of the UI or even browse the DOM. Now that my test passes I want to integrate cypress into my docker-compose so I can run it without installing cypress, which will help when I'll run it in my CI environment.
 
-## Integrate Cypress into the docker compose
+## Integrate Cypress into the docker-compose
 
 I added the following service to my docker-compose.yml
 
@@ -238,7 +238,7 @@ I added the following service to my docker-compose.yml
       - ./Toss.Tests.E2E.Cypress/:/e2e
 ```
 
-- I mount the cypress tests as a volume, so I can also get back the cypress test execution artifacts (screenshot and videos)
+- I mount the cypress tests as a volume, so I can also get the cypress test execution artifacts back (screenshot and video)
 - The "depends_on" is really usefull for starting things in order (ravendb -> web -> cypress)
 - By default cypress tries to test http://localhost, here I change it for the service url with the env variable CYPRESS_baseUrl
 
@@ -263,7 +263,7 @@ pool:
 
 steps:
 - task: DockerCompose@0
-  displayName: 'Run a Docker Compose command'
+  displayName: 'Run a docker-compose command'
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'dockerhub remibou'
