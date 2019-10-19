@@ -1,6 +1,6 @@
 ---
 layout: post
-feature-img: "assets/img/pexels/circuit.jpeg"
+feature-img: "assets/img/pexels/wall_e.jpeg"
 tags: [Blazor,Tests,RavenDB,Cypress,AzureDevOps]
 ---
 
