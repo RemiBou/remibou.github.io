@@ -113,7 +113,7 @@ public void Dispose()
 {
     this.exceptionNotificationService.OnException -= HandleExceptions;
 }
-
+```
 - The JsInterop.Toastr method just display a toastr.
 - Don't forget to unsubcribe or the instance of your component will stay around for ever
 - I couldn't find how to make this code async/await. So for async calls I had to add an empty ContinueWith as Wait() does not work on mono.
