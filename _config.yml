@@ -18,7 +18,7 @@ theme_settings:
      <p>Rémi Bourgarel's Blog.</p>
   header_text_feature_image: assets/img/pexels/computer2.jpeg
   footer_text: >
-   Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+   Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>. <a href="https://www.buymeacoffee.com/mvez9cy" target="_blank">Buy me a coffee :)</a>
 
   # Icons
   rss: true  # Make sure you created a feed.xml with feed.xml layout
