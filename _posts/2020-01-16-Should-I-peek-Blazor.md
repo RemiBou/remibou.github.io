@@ -106,17 +106,60 @@ When you choose a framework there is some feature you would like to see that you
 - DOM manipulations : while it's a bad practice to do it with a framwework like this, some people will still do it. Here you can do it with JS interop but there is no guarantee that your change won't be erased because blazor keeps a state of the app in memory.
 - Decorator : in Blazor you can't change an existing tag behavior deal wih it.
 - SEO : more about that later
+- For Blazor server-side : you need a stable network connection
 
 ### Licensing
 Blazor is part of the [ASPNET Core repository](https://github.com/dotnet/aspnetcore) and is realsed under the Apache 2.0 license. In my understanding, from a user point of view there is no constraint.
 
 ### Performance
-For a frontend framework we can use [Lighthouse](https://developers.google.com/web/tools/lighthouse/) for getting informations about load time. I decided to create a small benchmark where I compare 2 Hello World app, one created with Blazor, the other with Angular 8. You can find the code [here]()
+For a frontend framework we can use [Lighthouse](https://developers.google.com/web/tools/lighthouse/) for getting informations about load time. I decided to create a small example where I compare 2 app created from the cli, one created with Blazor, the other with Angular 8. You can find the code [here](https://github.com/RemiBou/Blog-angular-blazor-performance). 
+Because the tests where done locally the Time To First Byte is not relevant. The build and run were done with production settings (Release configuration and --prod flag)
 
+#### Build time
+
+| Metric        | Blazor Client Side    | Blazor Server Side    | Angular  |
+| ------------- |:-------------:        |-------------:         | -----:|
+| Build time    | 7sec                  |  6sec                 | 21sec |
+
+Blazor clearly wins here.
+
+#### Resuls with CPU and bandwidth throtling on
+
+| Metric        | Blazor Client Side    | Blazor Server Side    | Angular  |
+| ------------- |:-------------:| -----:|
+| Performance score | 65 | 88 | 98 |
+| First contentful paint | 1.5sec | 3.2 sec| 2.0sec |
+| Time to interactive | 19.5sec | 3.3sec | 2.0sec |
+| JS / Bin size uncomrpessed | 2100KB | 210kb  | 628KB |
+
+- The performance are really bad for Blazor client side. 
+- The Blazor client-side size is not enormous but still it's 3-4x bigger than the Angular app and 10x the Blazor server-side size. 
+- The time to interactive is also very big for the Blazor client-side
+
+Note : This test doesn't use gzip compression for the web server so you can reduce the Blazor ouput by 40% and Angular by 60% (from my experience).
+
+#### Resuls with CPU and bandwidth throtling off
+
+| Metric            | Blazor Client Side    | Blazor Server Side    | Angular  |
+| -------------     |:-------------         | -----                 | -------- |
+| Performance score  | 100                    | 100                   |  98 |
+| First contentful paint | 0.2sec | 0.2sec | 2.0sec |
+| Time to interactive | 1.6sec | 0.2sec | 2.0sec |
+| JS / Bin size uncomrpessed | 2100KB | 210kb  | 628KB |
+
+- Blazor client-side performs better with better CPU and bandiwdth (no sh#t)
 
 ### Cost
-- learning
-- hosting
+
+#### Learning / training
+
+If your team already uses ASPNET Core MVC or Razor Pages, there isn't a lot of things to learn, that's again one of the great thing about Blazor : if you  already know ASPNET, you will feel like it's just an other library that will open a lot of things. 
+
+#### Hosting
+
+Blazor client-side : given the size of the downloaded binaries, it might incerase your bandwidth bill, but it's only a few meg compared to dozens of images or video, it might not be relevant in your case.
+
+Blazor server-side : there is a lot of
 
 ### Stability
 - issues in gh
