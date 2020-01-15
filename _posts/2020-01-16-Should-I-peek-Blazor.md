@@ -132,9 +132,8 @@ Blazor clearly wins here.
 | Time to interactive | 19.5sec | 3.3sec | 2.0sec |
 | JS / Bin size uncomrpessed | 2100KB | 210kb  | 628KB |
 
-- The performance are really bad for Blazor client side. 
 - The Blazor client-side size is not enormous but still it's 3-4x bigger than the Angular app and 10x the Blazor server-side size. 
-- The time to interactive is also very big for the Blazor client-side
+- The time to interactive is way too high for the Blazor client-side
 
 Note : This test doesn't use gzip compression for the web server so you can reduce the Blazor ouput by 40% and Angular by 60% (from my experience).
 
@@ -147,7 +146,7 @@ Note : This test doesn't use gzip compression for the web server so you can redu
 | Time to interactive | 1.6sec | 0.2sec | 2.0sec |
 | JS / Bin size uncomrpessed | 2100KB | 210kb  | 628KB |
 
-- Blazor client-side performs better with better CPU and bandiwdth (no sh#t)
+- Blazor client-side performs better with better CPU and bandiwdth (no sh#t !), the Time to Interactive is now acceptable.
 
 ### Cost
 
@@ -155,19 +154,30 @@ Note : This test doesn't use gzip compression for the web server so you can redu
 
 If your team already uses ASPNET Core MVC or Razor Pages, there isn't a lot of things to learn, that's again one of the great thing about Blazor : if you  already know ASPNET, you will feel like it's just an other library that will open a lot of things. 
 
+#### Setup
+
+Blazor Client-side : there is no additionnal setup to do if you use the hosted template because your ASPNET app will embed the client-side binaries and all the necessary configurations. If you need to publish your app in a standalone app then you can read the instructions [here](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/blazor/webassembly?view=aspnetcore-3.1). 
+
+Blazor Server-side : You need to setup WebSocket because it's the most efficient way to handle SignalR connection. You can find more informations [here](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/blazor/server?view=aspnetcore-3.1).
+
 #### Hosting
 
-Blazor client-side : given the size of the downloaded binaries, it might incerase your bandwidth bill, but it's only a few meg compared to dozens of images or video, it might not be relevant in your case.
+Blazor client-side : 
+- given the size of the downloaded binaries, it might increase your bandwidth bill, but it's only a few meg compared to dozens of images or video, it might not be relevant in your case.
 
-Blazor server-side : there is a lot of
+Blazor server-side : 
+- there is a lot of exchange between client and server because every single GUI update is an event message from the client to the server and a response from server with needed GUI update. This kind of exchange are quite minimal. Even if it's not 0, I don't think this kind of bandwidth will have any impact on your bill if you already display images and video on your web app. 
+- Blazor server-side uses SignalR so it requires a bit of setup on your IIS or PaaS. From a cost perspective this might be relevant if your PaaS offering is limited.
+
 
 ### Stability
-- issues in gh
-- server side scaling 
 
-### Support
-- open source
-- client-side not released
+Blazor client-side : 
+- [There is currently](https://github.com/dotnet/aspnetcore/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue++label%3Ablazor-wasm+) 67 Opened issues (12 bugs) on the ASPNET repo. You can browse the opened one and see if there are showstopper for you. The only thing that might be a showstopper is this [one](https://github.com/dotnet/aspnetcore/issues/5477), where some people reported that their firewall blocked download of client-side binaries because their url ended with ".dll". It's planned to be fixed on 3.2 preview4 which is planned for April, so before the first release.
+- **Blazor client-side was not released yet** so you might want to wait before using it in production. But it shares a lot with Blazor server-side which was released 4 month ago so the team will certainy not published a lot of breaking changes in the syntax or the framework mechanisms.
+
+Blazor server-side : 
+- [There is currently](https://github.com/dotnet/aspnetcore/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue++label%3Aarea-blazor+) 453 Opened issues (87 bugs) on the ASPNET repo. You can browse the opened one and see if there are showstopper for you. 
 
 ### Compatibility
 - Browser 
