@@ -43,7 +43,7 @@ Here it's the same thing. I make the distinction between a web application and a
 - A web site is a collection of web page where the user navigates between them with link. Most fo the workload is read only, there is a LOT of traffic, most of the users come and go, SEO needs is crucial, page must be displayed in less than 100ms ...
 
 Most of the time a project is a combination of both : you'll build a cms (web app) that will generate a blog (web site). Or there is a shopping cart (web app) part in a online retailer site (web site). 
-I would still suggest that either you split the 2 aspect in 2 distinct projects using 2 different technologies or you choose one and pick your toolchain with it.
+I would still suggest that either you split the 2 aspectss in 2 distinct projects using 2 differents technologies or you choose one and pick your toolchain with it.
 
 2 examples :
 
@@ -87,13 +87,13 @@ Results : If you have strong SEO needs, Blazor client-side is not recommended.
 
 ### Do you need to do DOM manipulation ?
 
-While it's a bad practice to do it with a framwework like this, some people will still do it. Here you can do it with JS interop but there is no guarantee that your change won't be erased because Blazor keeps a state of the app in memory.
+While it's a bad practice to do it with a framework like this, some people will still do it. Here you can do it with JS interop but there is no guarantee that your change won't be erased because Blazor keeps a state of the app in memory.
 
 Results : this doesn't change anything, I don't think you should do DOM manipulation with a front-end framework.
 
 ### Does your app needs to be available offline ?
 
-I can occur when you are using a web application with your phone that the internet conection goes down. In Google Doc this is not a problem and your change will be saved when the connection is restored. With Blazor client-side there is no problem as long as you manage the connection error on your code (and you can use [Polly](https://github.com/App-vNext/Polly) for that), you will be fine. 
+When you are using a web application on your phone, the internet conection is not always stable. In Google Doc this is not a problem and your change will be saved when the connection is restored. With Blazor client-side there is no problem as long as you manage the connection error on your code (and you can use [Polly](https://github.com/App-vNext/Polly) for that), you will be fine. 
 
 But in Blazor server-side the GUI state is stored on the server so if your user looses the connection, the application will stop working and the user might fail to recover his session when the connection is back but [depending on the duration of the outage](https://docs.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-3.1#blazor-server) it might not be possible. Here is the result for the user when reonnection fails :
 
