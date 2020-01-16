@@ -19,7 +19,10 @@ You will get a good description of Blazor from the official website : [https://d
 
 Blazor is a framework for building web UI using C#. It has 2 way of working :
 - Client-Side : This way of working looks a lot like Angular or React. Your .net assemblies are downloaded on the browser and executed by a .net runtime build aginst WebAssembly. This runtime is called "monowasm" it is developped by the mono team (I think this is because they have the exeperience in working with environment with low ressources).
+![Blazor client-side](https://docs.microsoft.com/fr-fr/aspnet/core/blazor/index/_static/blazor-webassembly.png?view=aspnetcore-3.1 "Blazor client-side")
+
 - Server-Side : A SignalR connection between the browser and the server is opened, when something happens on one of the side (eg : a click on a button), the server sends the DOM changes that must be done to the client. I think this was created
+![Blazor server-side](https://docs.microsoft.com/fr-fr/aspnet/core/blazor/index/_static/blazor-server.png?view=aspnetcore-3.1 "Blazor server-side")
 
 ## Should I use it ?
 
