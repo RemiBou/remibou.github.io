@@ -133,7 +133,7 @@ Blazor clearly wins here.
 | JS / Bin size uncomrpessed | 2100KB | 210kb  | 628KB |
 
 - The Blazor client-side size is not enormous but still it's 3-4x bigger than the Angular app and 10x the Blazor server-side size. 
-- The time to interactive is way too high for the Blazor client-side
+- The time to interactive is quite high for the Blazor client-side, maybe the reduction of binary size or the rise of AoT will solve this
 
 Note : This test doesn't use gzip compression for the web server so you can reduce the Blazor ouput by 40% and Angular by 60% (from my experience).
 
@@ -148,19 +148,17 @@ Note : This test doesn't use gzip compression for the web server so you can redu
 
 - Blazor client-side performs better with better CPU and bandiwdth (no sh#t !), the Time to Interactive is now acceptable.
 
-### Cost
+### Learning
 
-#### Learning / training
+If your team already uses ASPNET Core MVC or Razor Pages, there isn't a lot of things to learn. That's one of the great thing about Blazor : if you  already know ASPNET, you will feel like it's just an other library that will open a lot of things. 
 
-If your team already uses ASPNET Core MVC or Razor Pages, there isn't a lot of things to learn, that's again one of the great thing about Blazor : if you  already know ASPNET, you will feel like it's just an other library that will open a lot of things. 
-
-#### Setup
+### Hosting Setup
 
 Blazor Client-side : there is no additionnal setup to do if you use the hosted template because your ASPNET app will embed the client-side binaries and all the necessary configurations. If you need to publish your app in a standalone app then you can read the instructions [here](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/blazor/webassembly?view=aspnetcore-3.1). 
 
 Blazor Server-side : You need to setup WebSocket because it's the most efficient way to handle SignalR connection. You can find more informations [here](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/blazor/server?view=aspnetcore-3.1).
 
-#### Hosting
+### Hosting cost
 
 Blazor client-side : 
 - given the size of the downloaded binaries, it might increase your bandwidth bill, but it's only a few meg compared to dozens of images or video, it might not be relevant in your case.
@@ -174,16 +172,21 @@ Blazor server-side :
 
 Blazor client-side : 
 - [There is currently](https://github.com/dotnet/aspnetcore/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue++label%3Ablazor-wasm+) 67 Opened issues (12 bugs) on the ASPNET repo. You can browse the opened one and see if there are showstopper for you. The only thing that might be a showstopper is this [one](https://github.com/dotnet/aspnetcore/issues/5477), where some people reported that their firewall blocked download of client-side binaries because their url ended with ".dll". It's planned to be fixed on 3.2 preview4 which is planned for April, so before the first release.
-- **Blazor client-side was not released yet** so you might want to wait before using it in production. But it shares a lot with Blazor server-side which was released 4 month ago so the team will certainy not published a lot of breaking changes in the syntax or the framework mechanisms.
+- **Blazor client-side was not released yet** so you might want to wait before using it in production. But it shares a lot with Blazor server-side which was released 4 month ago so the team will certainy not published a lot of breaking changes in the syntax or the frclient-sideamework mechanisms.
 
 Blazor server-side : 
 - [There is currently](https://github.com/dotnet/aspnetcore/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue++label%3Aarea-blazor+) 453 Opened issues (87 bugs) on the ASPNET repo. You can browse the opened one and see if there are showstopper for you. 
 
 ### Compatibility
-- Browser 
-- Other server
+Blazor client-side :
+- [88,53%](https://caniuse.com/#feat=wasm) os the internet user base use a browser that can execute WebAssembly
+- Given the output size, you need a good bandwidth for having a nice user experience (2MB takes 32sec to download on a 512kps connection)
+- Like any client-side executed code, the user experience is dependant on the user CPU. Don't forget to test your app with slow CPU to be sure that the user experience is still OK. I can't find any data about the average CPU in the world, so you might need to add some APM to your app, like Application Insight, that will centralize browser loading time so you have a clue of the user experience on your app.
+
+Blazor server-side :
+- it's compatible with almost any browser as it uses many connection technique (polling, long polling, web socket) and choose the best available for your browser. 
 
 ### Architecture
-- 
+
 
 ### SEO
