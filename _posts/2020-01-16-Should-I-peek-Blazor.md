@@ -144,7 +144,7 @@ Because the tests where done locally the Time To First Byte is not relevant. The
 | Performance score | 65 | 88 | 98 |
 | First contentful paint | 1.5sec | 3.2 sec| 2.0sec |
 | Time to interactive | 19.5sec | 3.3sec | 2.0sec |
-| JS / Bin size uncompressed | 2100KB | 210kb  | 628KB |
+| JS / Bin size uncompressed | 2100KB | 210KB  | 628KB |
 
 - The Blazor client-side size is not enormous ([as of July '17 the average page size on the internet is 3MB](https://discuss.httparchive.org/t/tracking-page-weight-over-time/1049)) but still it's 3-4x bigger than the Angular app and 10x the Blazor server-side size. The team is working on reducing this (1.5MB is the tartget for the release). But still you will have to be careful with the library your are using on your front-end project, just like you would do with Angular.
 - The time to interactive is quite high for the Blazor client-side, maybe the reduction of binary size or the rise of AoT will solve this.
@@ -159,7 +159,7 @@ Note : This test doesn't use gzip compression for the web server so you can redu
 | Performance score  | 100                    | 100                   |  98 |
 | First contentful paint | 0.2sec | 0.2sec | 2.0sec |
 | Time to interactive | 1.6sec | 0.2sec | 2.0sec |
-| JS / Bin size uncompressed | 2100KB | 210kb  | 628KB |
+| JS / Bin size uncompressed | 2100KB | 210KB  | 628KB |
 
 - Blazor client-side performs better with better CPU and better bandwidth (no sh#t !), the Time to Interactive is now acceptable.
 - Blazor server-side performance are better than Angular 
