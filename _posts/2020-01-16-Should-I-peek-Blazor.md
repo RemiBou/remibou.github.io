@@ -6,46 +6,20 @@ tags: [blazor, architecture]
 
 # Should I peek Blazor ?
 
+*ALL THIS BLOG POST CONTENT IS MY OPINION. IF YOU HAVE A DIFFERENT ONE PLEASE POST A COMMENT*
+
 On Twitter or Reddit I can often see question about whether Blazor is a good choice for your project. In this blog post I will try to give you my opinion on the subject.
 First I will try to describe where Blazor fits in the technology landscape, its advantage and incovenient. 
 
 ## Quick presentation
+
 ### What is Blazor ?
 
 You will get a good description of Blazor from the official website : [https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor). It belongs to the family of the SPA framework like angular, react or vue.
 
 Blazor is a framework for building web UI using C#. It has 2 way of working :
 - Client-Side : This way of working looks a lot like Angular or React. Your .net assemblies are downloaded on the browser and executed by a .net runtime build aginst WebAssembly. This runtime is called "monowasm" it is developped by the mono team (I think this is because they have the exeperience in working with environment with low ressources).
-
-Advantages :
-- Do no rely network connection (Ionic App or Offline PWA)
-- Might reduce load on the server
-
-Disdvantages :
-- Download size
-- Relies on WebAssembly (https://caniuse.com/#feat=wasm 88% of usage)
-- Still not released 
-- Startup time can be long (mostly because of download size)
-- SEO can be hard to do
-- You can only use HTTP for talking to a server
-- The runtime isn't fully implemented yet : some netstandard library won't work (like the SingalR c# client)
-- The runtime is different, some class might behave differently on Blazor than on ASPNET Core like the HttpClient that doesn't publish Diagnostic information.
-
 - Server-Side : A SignalR connection between the browser and the server is opened, when something happens on one of the side (eg : a click on a button), the server sends the DOM changes that must be done to the client. I think this was created
-
-Advantages :
-- Works for everyone (SignalR works on nearly all the browsers as it tries to use the available connecting method on your browser)
-- Was released in .net core 3.1
-- Download size smaller
-- Can use all kind of protocol for talking to a server
-- You can use everything you already use in your netcore app
-
-Disadvantages :
-- UI state is stored on the server ([even the .net team prove that this is not an issue](https://docs.microsoft.com/en-US/aspnet/core/host-and-deploy/blazor/server?view=aspnetcore-3.1))
-- Cannot work without network connection
-- Connection kept open between client and server
-- The developper makes abstraction about the network traffic between client and server, so you can have performance problem at some point (a bit like a SELECT N+1 problem with an ORM)
-- Server setup can be tedious if you want to use WebSocekt.
 
 ## Should I use it ?
 
@@ -61,7 +35,7 @@ Here it's the same thing. I make the distinction between a web application and a
 - A web site is a collection of web page where the user navigates between them with link. Most fo the workload is read only, there is a LOT of traffic, most of the users come and go, SEO needs is crucial, page must be displayed in less than 100ms ...
 
 Most of the time a project is a combination of both : you'll build a cms (web app) that will generate a blog (web site). Or there is a shopping cart (web app) part in a online retailer site (web site). 
-I would still suggest that either you split the 2 aspect in 2 distinct projects or you choose one and choose your toolchain with it.
+I would still suggest that either you split the 2 aspect in 2 distinct projects suing 2 different technologies or you choose one and choose your toolchain with it.
 
 2 examples :
 
@@ -227,6 +201,7 @@ That's highly subjective but I can give you a few arguments :
 - The fact that you will use one syntax accross your fullstack will improve onboarding of unexperienced developer.
 - You can debug both type of app just like you would do with a MEAN stack : on the browser for client-side code, and on the server for server-side. But this will change before the Blazor client-side release in May as you should be able to debug it in Visual Studio as well
 - The fact that the deployment story doesn't change will make your DevOps work more on the Dev than on learning how to setup nginx
+- When you need some JS function or Browser API it will need a bit more work
 
 Results : after reading this you should have decided to use Blazor :D
 
@@ -235,3 +210,9 @@ Results : after reading this you should have decided to use Blazor :D
 Well that a tough one. Honestly I don't know, the point of Blazor is mostly its integration in the full .net environement, using it with Spring seems pointless. BUT I have been doing some angular developement for a while and honestly I prefer Razor / C# syntax to Type Script and angular templating. But here it's a matter of taste and there isn't any objective way for answering.
 
 Results : there is no reason to not use it, see with your team taste. If they like java maybe they will prefer Blazor to Angular or React.
+
+## Conclusion 
+
+I can see one situation where the choice would be obvious for me : an ASPNET Core web APP (not web site), I would do the GUI with Blazor. I would pick server-side if the connection problem does not apply, client-side else.
+
+On every other case I would follow my quesiton list and do the choice with the team. But still I beleive in this project and I beleive it will be around for a long time.
