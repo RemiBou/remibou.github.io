@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [blazor, architecture]
+tags: [Blazor, architecture]
 ---
 
 # Should I peek Blazor ?
