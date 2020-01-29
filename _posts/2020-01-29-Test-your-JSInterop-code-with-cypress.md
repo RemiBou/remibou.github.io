@@ -45,7 +45,7 @@ This test clicks on a button and then expect the console.log to be called twice.
 
 ## The problem with JSInterop
 
-This would work very well in a pure js application. If the console.log method call are done with JSInterop like in a Blazor WASM app with this code
+This would work very well in a pure js application. If the console.log method calls are done with JSInterop like in a Blazor WASM app :
 
 ```cs
 await jsRuntime.InvokeVoidAsync("console.log","test");
@@ -53,7 +53,7 @@ await jsRuntime.InvokeVoidAsync("console.log","test");
 Console.WriteLine("test");
 ```
 
-Then it would fail with this error
+This would fail with this error :
 
 ```
 blazor.webassembly.js:1 WASM: ﻿Unhandled exception rendering component:
@@ -73,7 +73,7 @@ blazor.webassembly.js:1 WASM:   at System.Threading.Tasks.ValueTask`1[TResult].g
 blazor.webassembly.js:1 WASM:   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync (Microsoft.JSInterop.IJSRuntime jsRuntime, System.String identifier, System.Object[] args) <0x2081800 + 0x000e4> in <3eedf0ca90ca4e72bf6870618ca98c7c>:0 
 ```
 
-Tgis is due to this code in JS you can find in [this file](https://github.com/dotnet/extensions/blob/master/src/JSInterop/Microsoft.JSInterop.JS/src/src/Microsoft.JSInterop.ts) :
+This is due to this code in Microsoft.JSInterop you can find in [this file](https://github.com/dotnet/extensions/blob/master/src/JSInterop/Microsoft.JSInterop.JS/src/src/Microsoft.JSInterop.ts) :
 
 ```ts
 function findJSFunction(identifier: string): Function {
@@ -104,14 +104,14 @@ function findJSFunction(identifier: string): Function {
 }
 ```
 
-You see the problem ? No ? Well it's not easy : 
-- types are defined by window. eg : if you have an iframe then the type "Function" inside the iframe is not the same as the "Function" type in the parent. 
-- cy uses iframes for running the tests (that's why you are not limited like in WebDriver)
-- when you call cy.spy, it changes the definition of console.log, so its type becomes a "Function" in the context of the test runner iframe.
+You see the problem ? No ? Well it's not obvious : 
+- In JS types are defined by window. eg : if you have an iframe then the type "Function" inside the iframe is not the same as the "Function" type in the parent. 
+- Cypress uses iframes for running the tests (that's why you are not limited like in WebDriver)
+- when you call cy.spy, it changes the definition of console.log, so its type becomes a "Function" in the context of the runner iframe, not the app.
 
 ## How do I fix this ?
 
-Fortunately js allows us to do very stupid things, like change an object prototype on the fly ! After the fix, my code cypress test becomes this
+Fortunately Javascript allows us to do very stupid things, like changing an object prototype on the fly ! After the fix, my Cypress code test looks this :
 
 ```js
 
@@ -135,7 +135,7 @@ context('window.console', () => {
 );
 ```
 
-Notice the line after the spy ([which is synchronous](https://docs.cypress.io/api/commands/spy.html#Syntax)) which changes console.log prototype, tgis makes the "instanceof Function" condition pass and my test run successfully.
+Notice the line after the spy ([which is synchronous](https://docs.cypress.io/api/commands/spy.html#Syntax)) which changes console.log prototype, this makes the "instanceof Function" condition pass and my test run successfully.
 
 I created the following Cypress command to reduce code duplication
 
