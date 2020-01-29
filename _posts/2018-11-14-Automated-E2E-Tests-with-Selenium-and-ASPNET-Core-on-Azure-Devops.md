@@ -1,7 +1,7 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [Azure DevOps, ASPNET Core, Cosmos DB, Selenium Web Driver]
+tags: [Azure DevOps, ASPNET Core, Cosmos DB, Selenium Web Driver, Tests]
 ---
 # Setup an Azure DevOps CI pipeline with E2E tests against a ASPNET Core server
 In my project Toss, I have classic Unit / Integration test but also end-to-end tests with Selenium WebDriver. I need those test for 2 reasons :
