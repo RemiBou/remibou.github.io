@@ -167,4 +167,4 @@ context('window.console', () => {
 
 ## Conclusion
 
-I'm happy I found an easy way to fix this, there is other ways with new win.Function or by overriding some window.DotNet functions but they require more line of code and are ore complicated.
+I'm happy I found an easy way to fix this, there is other ways with "new win.Function" or by overriding some method in window.DotNet but they require more line of code and are much more complicated.
