@@ -135,6 +135,34 @@ context('window.console', () => {
 
 Notice the line after the spy ([which is synchronous](https://docs.cypress.io/api/commands/spy.html#Syntax)) which changes console.log prototype, tgis makes the "instanceof Function" condition pass and my test run successfully.
 
+I created the following Cypress command to reduce code duplication
+
+```js
+
+Cypress.Commands.add('spyFix', (object, method, window) => {
+    cy.spy(object, method);
+    object[method].__proto__ = window.Function;
+});
+
+context('window.console', () => {
+    before(() => {
+        cy.visit('/console');
+    });
+
+    it('Check console methods called', () => {
+        cy.window()
+            .then((w) => {
+                cy.spyFix(w.console, "log");
+                cy.get("#btn-console-do-test").click()
+                    .then(() => {
+                        expect(w.console.log).be.called.calledThrice;
+                    });
+            });
+    });
+}
+);
+```
+
 ## Conclusion
 
 I'm happy I found an easy way to fix this, there is other ways with new win.Function or by overriding some window.DotNet functions but they require more line of code and are ore complicated.
