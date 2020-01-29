@@ -154,7 +154,7 @@ context('window.console', () => {
     it('Check console methods called', () => {
         cy.window()
             .then((w) => {
-                cy.spyFix(w.console, "log");
+                cy.spyFix(w.console, "log", w);
                 cy.get("#btn-console-do-test").click()
                     .then(() => {
                         expect(w.console.log).be.called.calledThrice;
