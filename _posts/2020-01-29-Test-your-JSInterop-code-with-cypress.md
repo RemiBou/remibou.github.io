@@ -8,9 +8,9 @@ tags: [ASPNET Core, Blazor, JSInterop, Cypress, Tests]
 
 [Cypress.io](https://www.cypress.io/) is a game changer in the world of web E2E test. So far it was dominated by WebDriver based framework but it has the following advantages :
 - It's easy to setup 
-- it's easy to integrate into a CI pipeline
+- It's easy to integrate into a CI pipeline
 - The API are fine (I still don't like the assertion methods)
-- The debug information it provides are golden
+- The debug information it provides are golden and makes your tests easy to fix
 - There is a lot of methods for making your tests less flaky (you do'nt have to add random wait every 2 lines)
 
 The only disadvantage being the maturity of the tool so there is some missing pieces like built-in file upload or spying of fetch request but the community is quite large and there is always a 3rd party script/lib for fixing what is missing.
