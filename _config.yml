@@ -1,7 +1,7 @@
 # SITE CONFIGURATION
 url: "https://remibou.github.io"
 permalink: /:title/
-baseurl: "https://remibou.github.io"
+baseurl: ""
 title:  Rémi Bourgarel's Blog # site's title
 description: "Blog about software development. Blazor, ASPNET Core, C#, Web Assembly, Spring, Angular, Docker " # used by search engines
 name: Rémi Bourgarel's Blog
