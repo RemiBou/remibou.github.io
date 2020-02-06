@@ -82,9 +82,80 @@ If I look at the profiling session I did on the previous paragraph, I can see th
 - "await" overhead in mono-wasm
 - task.Delay is not precise
 
-If I zoom on the profiling result I can see that there is a few ms before the JS interop call and the Delay call and then a few ms between what I think is the callback of the Delay and the timeEnd JS interop. So this overhead is clearly due to JS Interop back and forth.
+If I increase the Task.Delay to 200ms then the overhead is constant (+9,9ms) which seems normal because we are not doing CPU profiling. The overhead is not really a problem because the point is to treduce this number, the number itself is not very relevant. It can be relevant in some case, let's say you have a spec like this "you need to have this done under 100ms" then you will have to take into account the overhead during your optimization work.
+
+I did an other test and commented out the Task.Delay the step is only 1,5ms, so in the profiling above we can say that 1,5ms are because of the interop call and 7.5ms are because of Task.Delay.
+
+The problem with this overhead (even if it's low, we don't know on which computer our user will run the code) is that you can't keep this code in production because it would make performance worst in production. So you should put a flag before the profiling code and enable / disable it with an easter egg or something like that :
+
+
+```cs
+@inject IJSRuntime jsRuntime;
+@code {
+    private bool IsEnabled = false;
+    //...
+    public async Task Method(){
+        try{
+            if(IsEnabled)
+                await jsRuntime.InvokeVoidAsync("console.time", "sub task");
+            await Task.Delay(100);//do something 
+        }
+        finally{
+            if(IsEnabled)
+                await jsRuntime.InvokeVoidAsync("console.timeEnd", "sub task");
+        }
+    }
+    //...
+}
+```
+
+- There is still the overhead of the larger downloaded code and "if" evaluation but this is not relevant
+- This code is highly repetitive and should be refactored
 
 ## The BrowserInterop package
 
+At first I wanted to create a sub project in MiniProfiler but [I got some problem with Blazor and MiniProfiler](https://github.com/MiniProfiler/dotnet/issues/441). Then I found out about the browser API and I thougght about cerating a package that would wrap all the browser APIs and make them easier to use by a c# developer :
+- Use IDisposable like MiniProfiler
+- Use better typing when I can (enum, timespan, datetime ...)
+- Create helper for handling case not handled by builtin library like event handling or JS variable reference.
+
+So I created the package [BrowserInterop](https://www.nuget.org/packages/BrowserInterop) you can install it with this command
+
+```bash
+dotnet add package BrowserInterop --version 0.0.2-alpha
+```
+
+Then use it like that
+
+```cs
+@inject IJSRuntime jsRuntime;
+@using BrowserInterop ;
+@code {
+    private bool IsEnabled = false;
+    //...
+    public async Task Method(){
+        var window = await jsRuntime.Window();
+        await using(await window.Console.Time("sub task"))
+        {
+            await Task.Delay(200);
+        }
+    }
+    //...
+}
+```
+
+Wrapping the code in a using statement makes it easier to read. And becuase I refactored the interop call, I was able to provide a way for disabling it easily like that 
+
+```cs
+ConsoleInterop.IsEnabled = true;
+```
+
+With this value set to true, all calls to any method inside window.Console will be ignored. With a well placed easter egg (hidden button or double click on the header) you can enable or disable this.
+
+For now this package provides all the method in window.console and many method and fields in window.navigator. You can find out more on the project repository here [https://github.com/RemiBou/BrowserInterop](https://github.com/RemiBou/BrowserInterop). I will publish the package v1 once I'm done with the window API (alert, frames ...). Do not hesitate to try and and send me feedback on the repo, here, on twitter, by mail or anything.
+
 ## Conclusion
+
+Being able to profile live app is a real advantage and the only way for getting valuable results. I hope my solution and my package will help you.
+
 
