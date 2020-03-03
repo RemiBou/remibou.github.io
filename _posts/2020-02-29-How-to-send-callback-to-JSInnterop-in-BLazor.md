@@ -41,10 +41,7 @@ const obj = JSON.parse(json,(k,v) => {console.log(k,v); return v;} );
 
 The console will output this
 
-> "result" true
-"count" 42
-"inner" Object { count: 42 }
-"" Object { result: true, inner: Object { count: 42 } }
+> "result" true<br>"count" 42<br>"inner" Object { count: 42 }<br>"" Object { result: true, inner: Object { count: 42 } }
 
 The reviver is called from the most nested property up to the root of the object. With this, the ASPNET Core team produced this reviver for changing a serialized ElementReference to the actual DOM element  ([file](https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web.JS/src/Rendering/ElementReferenceCapture.ts)) :
 
