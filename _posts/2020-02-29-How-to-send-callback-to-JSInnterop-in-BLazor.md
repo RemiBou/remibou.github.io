@@ -190,4 +190,46 @@ Here is my C# wrapper :
 Here is the reviver in js
 
 ```js
+DotNet.attachReviver(function (key, value) {
+    if (value &&
+        typeof value === 'object' &&
+        value.hasOwnProperty("__isCallBackWrapper")) {
+
+        var netObjectRef = value.callbackRef;
+
+        return function () {            
+            netObjectRef.invokeMethodAsync('Invoke', ...arguments);
+        };
+    } else {
+        return value;
+    }
+});
 ```
+
+- DotNet.attachReviver is a method of the JSInterop js library
+- "...arguments" means that I will send all the callback parameters to the "Invoke" method call as consecutive argument instead of an array of parameter.
+
+SO for using this I declare this js function
+
+```js
+function testCallback(callback){
+    if(confirm('are you sure ?')){
+        callback("test");
+    }
+}
+```
+
+And call it like that in the .net side
+
+```cs
+await jsRuntime.InvokeVoidAsync("testCallback", CallBackInteropWrapper.Create<string>(s => Console.WriteLine(s)));
+```
+
+## BrowserInterop
+
+Blazor without JSInterop is really hard because you often need to use some specific browser API : open a new window, get the geolocalization, get battery level etc ... so i though about creating a library called "[BrowserInterop](https://www.nuget.org/packages/BrowserInterop)" that would wrap all the JS Interop call regarding the browser API. You can have a look at the [GitHub repository](https://github.com/RemiBou/BrowserInterop) for getting an diea about what I mean.
+
+During the development of this library I needed to implement window event handling (like "onclose" or "connection.onchange"), so I developped the technique described earlier and a a few more tools for avoiding .net developer to avoid writing js code as much as possible (I take a bullet for everyone if you prefer).
+
+
+
