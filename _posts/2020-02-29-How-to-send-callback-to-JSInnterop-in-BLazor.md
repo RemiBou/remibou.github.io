@@ -102,87 +102,83 @@ When you add @ref to an element in Blazor, it adds an id "_bl_NUMBER" to the HTM
     }
 ```
 
-They also created a JsonConverter for this type for keeping Id with no setter.
+They also created a JsonConverter for this type for keeping the property Id with no setter.
 
 ## Custom Reviver and Func wrapper
 
 Now we understand how they did it for ElementReference we can try to do it for Func. We need 2 thing :
 - A C# wrapper that would keep a reference to my Func and a JSInvokable method that would call it
-- A reviver that would detect that the object sended is a Func wrapper and call the C# method.
+- A JS reviver that would detect that the object sended is a Func wrapper and call the C# method.
 
 Here is my C# wrapper :
 
 ```cs
-    public class CallBackInteropWrapper
+public class CallBackInteropWrapper
+{
+    [JsonPropertyName("__isCallBackWrapper")]
+    public string IsCallBackWrapper { get; set; } = "";
+
+    private CallBackInteropWrapper()
     {
-        [JsonPropertyName("__isCallBackWrapper")]
-        public string IsCallBackWrapper { get; set; } = "";
 
-        private CallBackInteropWrapper()
+    }
+    public static CallBackInteropWrapper Create<T>(Func<T, Task> callback)
+    {
+        var res = new CallBackInteropWrapper
         {
+            CallbackRef = DotNetObjectReference.Create(new JSInteropActionWrapper<T>(callback))
+        };
+        return res;
+    }
 
+    public static CallBackInteropWrapper Create(Func<Task> callback)
+    {
+        var res = new CallBackInteropWrapper
+        {
+            CallbackRef = DotNetObjectReference.Create(new JSInteropActionWrapper(callback))
+        };
+        return res;
+    }
+
+    public object CallbackRef { get; set; }
+
+
+    private class JSInteropActionWrapper
+    {
+        private readonly Func<Task> toDo;
+
+        internal JSInteropActionWrapper(Func<Task> toDo)
+        {
+            this.toDo = toDo;
         }
-        public static CallBackInteropWrapper Create<T>(Func<T, Task> callback)
+        [JSInvokable]
+        public async Task Invoke()
         {
-            var res = new CallBackInteropWrapper
-            {
-                CallbackRef = DotNetObjectReference.Create(new JSInteropActionWrapper<T>(callback))
-            };
-            return res;
-        }
-
-        public static CallBackInteropWrapper Create(Func<Task> callback)
-        {
-            var res = new CallBackInteropWrapper
-            {
-                CallbackRef = DotNetObjectReference.Create(new JSInteropActionWrapper(callback))
-            };
-            return res;
-        }
-
-        public object CallbackRef { get; set; }
-
-
-        private class JSInteropActionWrapper
-        {
-            private readonly Func<Task> toDo;
-
-            internal JSInteropActionWrapper(Func<Task> toDo)
-            {
-                this.toDo = toDo;
-            }
-
-
-            [JSInvokable]
-            public async Task Invoke()
-            {
-                await toDo.Invoke();
-            }
-        }
-
-        private class JSInteropActionWrapper<T>
-        {
-            private readonly Func<T, Task> toDo;
-
-            internal JSInteropActionWrapper(Func<T, Task> toDo)
-            {
-                this.toDo = toDo;
-            }
-
-
-            [JSInvokable]
-            public async Task Invoke(T arg1)
-            {
-                await toDo.Invoke(arg1);
-            }
+            await toDo.Invoke();
         }
     }
+
+    private class JSInteropActionWrapper<T>
+    {
+        private readonly Func<T, Task> toDo;
+
+        internal JSInteropActionWrapper(Func<T, Task> toDo)
+        {
+            this.toDo = toDo;
+        }
+        [JSInvokable]
+        public async Task Invoke(T arg1)
+        {
+            await toDo.Invoke(arg1);
+        }
+    }
+}
 ```
 
-- I need to do it in 2 wrapper class : one for holding the informaiton "this is a func wrapper" and one for holding the JSInvokable method.
-- I created 2 variant : one where the Func accept an argument and the other where is doesn't
+- I need to do it in 2 wrapper class : one for holding the information "this is a func wrapper" and one for holding the JSInvokable method.
+- I created 2 variant : one where the Func accept an argument and the other where is doesn't, if I need to I will have to create one for each kind of Func I want to handle
 - I use Func&lt;Task&gt; so the callback can be asynchronous. I could also create overload for non Async callback but it would be too much noise.
-- My fields have getter and setter which is bad, but System.Text.Json doesn't provide an easy way to make those private unless you create your own JsonConverter. The best way to fix this in an assembly would be to mark the type as internal and expose it as an interface.
+- My fields have getter and setter which is not really good, but System.Text.Json doesn't provide an easy way to make those private unless you create your own JsonConverter. The best way to fix this in an lib would be to mark the type as internal and expose it as an interface.
 
 Here is the reviver in js
 
@@ -206,7 +202,7 @@ DotNet.attachReviver(function (key, value) {
 - DotNet.attachReviver is a method of the JSInterop js library
 - "...arguments" means that I will send all the callback parameters to the "Invoke" method call as consecutive argument instead of an array of parameter.
 
-SO for using this I declare this js function
+For using this I declare this js function
 
 ```js
 function testCallback(callback){
@@ -219,16 +215,24 @@ function testCallback(callback){
 And call it like that in the .net side
 
 ```cs
-await jsRuntime.InvokeVoidAsync("testCallback", CallBackInteropWrapper.Create<string>(s => Console.WriteLine(s)));
+private string callBackResult
+protected override async Task OnInitializedAsync()
+{
+    await jsRuntime.InvokeVoidAsync("testCallback", CallBackInteropWrapper.Create<string>(async s => {
+        this.callBackResult = s;
+        this.StateHasChanged();
+        await Task.Completed;
+    }));
+}
 ```
 
 ## BrowserInterop
 
-Blazor without JSInterop is a bit hard because you often need to use some specific browser API : open a new window, get the geolocalization, get battery level etc ... so I though about creating a library called "[BrowserInterop](https://www.nuget.org/packages/BrowserInterop)" that would wrap all the JS Interop call regarding the browser API and I would avoid implementing all the API that could be implemented via Blazor (like onclick event or DOM API). You can have a look at the [GitHub repository](https://github.com/RemiBou/BrowserInterop) for getting an idea about what I mean.
+Blazor without JSInterop is a bit hard because you often need to use some browser API : open a new window, get the geolocalization, get battery level etc ... so I though about creating a library called "[BrowserInterop](https://www.nuget.org/packages/BrowserInterop)" that would wrap all the JS Interop call regarding the browser API. You can have a look at the [GitHub repository](https://github.com/RemiBou/BrowserInterop) for getting an idea about what I mean.
 
-During the development of this library I needed to implement window event handling (like "onclose" or "connection.onchange"), so I developped the technique described earlier and a a few more tools for avoiding .net developer to avoid writing js code as much as possible (I take a bullet for everyone if you prefer).
+During the development of this library I needed to implement window event handling (like "onclose" or "connection.onchange"), so I developped the technique described earlier and a few more tools for helping .net developer to avoid writing js as much as possible (I take a bullet for everyone if you prefer).
 
-BrowserInterop provides the Wrapper I've explained beofre, you can use it like this :
+BrowserInterop provides the wrapper I described before, you can use it like this (after following the package "Getting started") :
 
 ```cs
 var window = await jsRuntime.Window();
@@ -238,12 +242,12 @@ var eventListening = await window.OnMessage<string>(async (payload) => {
             await Task.CompletedTask;
         });
 ```
-- Window() is a BrowserInterop method which is the entrypoint to all the other interop methods, it also gives information about the window object
-- OnMessage is an event handler for the "message" event on the window object. It's useful for cross window communication (a blog post will come about it)
-- The event listening returns an IAsyncDisposible that once disposed will stop listening, so you can stop listening to event when your component is disposed just like with C# event. 
+- Window() is a BrowserInterop method which is the entrypoint to all the other BrowserInterop methods, it also gives information about the window object
+- OnMessage is an event handler for the "message" event on the window object. It's usefull for cross window communication (a blog post will come about it)
+- The OnMessage returns an IAsyncDisposible that once disposed will stop listening, so you can stop listening to event when your component is disposed just like with C# event. 
 - Thanks to BrowserInterop, I can read the message. In "vanilla" JSInterop you would have an empty object because informations in the "message" event payload are not serialized when sent to JSON.stringify, more about this on an other blog post.
 
 
 ## Conclusion
 
-Even though C# developer dream (never touch JS againà) is becoming true with Blazor, you still need to do someplumbing for talking with the browser. Let's hope that some more library will remove this need in the future and maybe one day we'll be able to use Browser API directly with WebAssembly.
+Even though C# developer dream (never touch JS again) is becoming true with Blazor, you still need to do some plumbing for talking with the browser. Let's hope that some more library will remove this need in the future or maybe one day we'll be able to use Browser API directly with WebAssembly.
