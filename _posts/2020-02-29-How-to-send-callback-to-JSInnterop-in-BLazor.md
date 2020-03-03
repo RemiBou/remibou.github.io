@@ -227,9 +227,26 @@ await jsRuntime.InvokeVoidAsync("testCallback", CallBackInteropWrapper.Create<st
 
 ## BrowserInterop
 
-Blazor without JSInterop is really hard because you often need to use some specific browser API : open a new window, get the geolocalization, get battery level etc ... so i though about creating a library called "[BrowserInterop](https://www.nuget.org/packages/BrowserInterop)" that would wrap all the JS Interop call regarding the browser API. You can have a look at the [GitHub repository](https://github.com/RemiBou/BrowserInterop) for getting an diea about what I mean.
+Blazor without JSInterop is a bit hard because you often need to use some specific browser API : open a new window, get the geolocalization, get battery level etc ... so I though about creating a library called "[BrowserInterop](https://www.nuget.org/packages/BrowserInterop)" that would wrap all the JS Interop call regarding the browser API and I would avoid implementing all the API that could be implemented via Blazor (like onclick event or DOM API). You can have a look at the [GitHub repository](https://github.com/RemiBou/BrowserInterop) for getting an idea about what I mean.
 
 During the development of this library I needed to implement window event handling (like "onclose" or "connection.onchange"), so I developped the technique described earlier and a a few more tools for avoiding .net developer to avoid writing js code as much as possible (I take a bullet for everyone if you prefer).
 
+BrowserInterop provides the Wrapper I've explained beofre, you can use it like this :
+
+```cs
+var window = await jsRuntime.Window();
+var eventListening = await window.OnMessage<string>(async (payload) => {
+            onMessageEventPayload = payload;
+            StateHasChanged();
+            await Task.CompletedTask;
+        });
+```
+- Window() is a BrowserInterop method which is the entrypoint to all the other interop methods, it also gives information about the window object
+- OnMessage is an event handler for the "message" event on the window object. It's useful for cross window communication (a blog post will come about it)
+- The event listening returns an IAsyncDisposible that once disposed will stop listening, so you can stop listening to event when your component is disposed just like with C# event. 
+- Thanks to BrowserInterop, I can read the message. In "vanilla" JSInterop you would have an empty object because informations in the "message" event payload are not serialized when sent to JSON.stringify, more about this on an other blog post.
 
 
+## Conclusion
+
+Even though C# developer dream (never touch JS againà) is becoming true with Blazor, you still need to do someplumbing for talking with the browser. Let's hope that some more library will remove this need in the future and maybe one day we'll be able to use Browser API directly with WebAssembly.
