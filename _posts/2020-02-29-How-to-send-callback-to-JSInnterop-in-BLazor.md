@@ -13,7 +13,7 @@ Currently in the JS Interop API, you can do only one thing : call a given method
 - Html element (ElementReference in C# side)
 - Reference to C# object on which you can then call any method annotated with "JSInvokable"
 
-But what about passing a callback method, this would be useful if you want to register to an event like window.navigator.connection.onchange. With Blazor as-is, you can do it but you would have to do some plumbing and you would have to do it for every different callback you want to use. In this article I will show you how to do it in a more reusable way.
+But what about passing a callback method ? this would be useful if you want to register to an event like window.navigator.connection.onchange. With Blazor as-is, you can do it but you would have to do some plumbing and you would have to do it for every different callback you want to use. In this article I will show you how to do it in a more reusable way.
 
 ## Json Reviver
 
@@ -42,9 +42,9 @@ const obj = JSON.parse(json,(k,v) => {console.log(k,v); return v;} );
 The console will output this
 
 > "result" true
-> "count" 42
-> "inner" Object { count: 42 }
-> "" Object { result: true, inner: Object { count: 42 } }
+"count" 42
+"inner" Object { count: 42 }
+"" Object { result: true, inner: Object { count: 42 } }
 
 The reviver is called from the most nested property up to the root of the object. With this, the ASPNET Core team produced this reviver for changing a serialized ElementReference to the actual DOM element  ([file](https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web.JS/src/Rendering/ElementReferenceCapture.ts)) :
 
