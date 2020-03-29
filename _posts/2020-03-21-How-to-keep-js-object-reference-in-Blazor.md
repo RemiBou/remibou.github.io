@@ -100,4 +100,171 @@ I don't know why I went this far on the JSInterop explanation for this blog post
 - Create a C# class for keeping the ID around
 - When this serialized C# class is send to js interop change it to the corresponding JS object
 
-## Store
+## Store a method result to a map
+
+The first thing to do is build the same thing as JSRuntime but on js side.I first thought abut using a [WeakMap](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/WeakMap) but I don't really understand how it can be useful as the key i the object on whch we want to keep a weak reference. So, I use a simple javazcript object. Here is my method for storing the object
+
+```js
+var jsObjectRefs = {};
+var jsObjectRefId = 0;
+const jsRefKey = '__jsObjectRefId';
+function storeObjectRef(obj) {
+    var id = jsObjectRefId++;
+    jsObjectRefs[id] = obj;
+    var jsRef = {};
+    jsRef[jsRefKey] = id;
+    return jsRef;
+}   
+```
+
+Here is my sample js method calling it
+
+```js
+ function openWindow() {
+      return storeObjectRef(window.open("/", "_blank"));
+  }
+```
+
+And the JSInterop call
+
+```cs
+ public class JsRuntimeObjectRef
+  {
+      [JsonPropertyName("__jsObjectRefId")]
+      public int JsObjectRefId { get; set; }
+  }
+  private JsRuntimeObjectRef _windowRef;
+  private async Task OpenWindow()
+  {
+      _windowRef = await jsRuntime.InvokeAsync<JsRuntimeObjectRef>("openWindow");
+  }
+```
+
+I simplified the class : in Blazor the property is internal and they use a custom JsonConverter for serializing it while hiding it to users.
+
+## Using the reference in a method call
+
+Now I need to close this opened window, here is the JS method
+
+```js
+function closeWindow(window) {
+    window.close();
+}
+```
+
+And here is the C# interop call
+
+```cs
+private async Task CloseWindow()
+{
+    await jsRuntime.InvokeVoidAsync("closeWindow", _windowRef);
+}
+```
+
+You might be wondering : how does a JsRuntimeObjectRef becomes a window object on JS side ? With a reviver ! Here is its definition :
+
+```js
+DotNet.attachReviver(function (key, value) {
+    if (value &&
+        typeof value === 'object' &&
+        value.hasOwnProperty(jsRefKey) &&
+        typeof value[jsRefKey] === 'number') {
+
+        var id = value[jsRefKey];
+        if (!(id in jsObjectRefs)) {
+            throw new Error("This JS object reference does not exists : " + id);
+        }
+        const instance = jsObjectRefs[id];
+        return instance;
+    } else {
+        return value;
+    }
+});
+```
+
+This reviver will be called for every serialized object send to JS via JSInterop (even deep in the object graph, so you can send arrays or complex objects with JsRuntimeObjectRef properties.
+
+You can find all the working code [here](https://github.com/RemiBou/remibou.github.io/tree/master/projects/RemiBou.BlogPosts.JsReference).
+
+## Cleaning the kept reference from JS runtime memory.
+
+If we leave it like this, jsObjectRefs will keep a reference to js object forever which is bad and can impact your user experience (UX yeah). For removing the object reference in jsObjectRefs we'll do a bit like dit DotNetObjectReference and implement IAsyncDisposable in JsRuntimeObjectRef like this 
+
+```cs 
+
+public class JsRuntimeObjectRef : IAsyncDisposable
+  {
+      internal IJSRuntime JSRuntime { get; set; }
+
+      public JsRuntimeObjectRef()
+      {
+      }
+
+      [JsonPropertyName("__jsObjectRefId")]
+      public int JsObjectRefId { get; set; }
+
+      public async ValueTask DisposeAsync()
+      {
+          await JSRuntime.InvokeVoidAsync("browserInterop.removeObjectRef", JsObjectRefId);
+      }
+  }
+  private JsRuntimeObjectRef _windowRef;
+  private async Task OpenWindow()
+  {
+      _windowRef = await jsRuntime.InvokeAsync<JsRuntimeObjectRef>("openWindow");
+      _windowRef.JSRuntime = jsRuntime;
+  }
+
+  private async Task CloseWindow()
+  {
+      await jsRuntime.InvokeVoidAsync("closeWindow", _windowRef);
+      await _windowRef.DisposeAsync();
+  }
+```
+
+Because you need to set JSRuntime after every new  JsRuntimeObjectRef creation, it might be a better idea to wrap this into an extension method.
+
+Here is the JS method
+
+```js
+function cleanObjectRef(id) {
+    delete jsObjectRefs[jsObjectRefId];
+}
+```
+
+Now, when we close the opened window, the reference to said window will be removed and the browser will be able to GC it if it feels like it.
+
+
+## BrowserInterop
+
+On my last blog post I talked about my library [BrowserInterop](https://www.nuget.org/packages/BrowserInterop) which is a library for making the developer life easier when he/she needs to use JSInterop. This library uses a lot of the things I talked about in this blog post because I need to keep reference of window object. For making my life easier I created a bunch of utility methods that you can use :
+
+
+```cs
+IJSRuntime jsRuntime;
+// this will get a reference to the js window object that you can use later, it works like ElementReference ofr DotNetRef : you can add it to any method parameter and it 
+// will be changed in the corresponding js object 
+var windowObjectRef = await jsRuntime.GetInstancePropertyAsync<JsRuntimeObjectRef>("window");
+// get the value of window.performance.timeOrigin
+var time = await jsRuntime.GetInstancePropertyAsync<decimal>(windowObjectRef, "performance.timeOrigin");
+// set the value of the property window.history.scrollRestoration
+await jsRuntime.SetInstancePropertyAsync(windowObjectRef, "history.scrollRestoration", "auto");
+//get a reference to window.parent
+var parentRef = await jsRuntime.GetInstancePropertyRefAsync(windowObjectRef, "parent");
+// call the method window.console.clear with window.console as scope
+await jsRuntime.InvokeInstanceMethodAsync(windowObjectRef, "console.clear");
+// call the method window.history.key(1) with window.history as scope
+await jsRuntime.InvokeInstanceMethodAsync<string>(windowObjectRef, "history.key",1 );
+//will listen for the event until DisposeAsync is called on the result
+var listener = await jSRuntime.AddEventListener(windowObjectRef, "navigator.connection", "change", () => Console.WriteLine("navigator connection change"));
+//stop listening to the event, you can also use "await using()" notation
+await listener.DisposeAsync();
+//will return true if window.navigator.registerProtocolHandler property exists
+await jsRuntime.HasProperty(windowObjectRef, "navigator.registerProtocolHandler")
+```
+
+There is many methods, I will create blog pst about it soon, but you still can use it and send me feedback/bug reports.
+
+## Conclusion
+
+I rant a lot in my head about the lack of hooks in ASPNET Core (HttpClient ...) but the reviver one, while undocumented, is really great here.

@@ -1,0 +1,41 @@
+﻿@page "/"
+@inject IJSRuntime jsRuntime;
+@using System.Text.Json.Serialization
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<button type="button" @onclick="OpenWindow">Open</button>
+<button type="button" @onclick="CloseWindow">Close</button>
+<button type="button" @onclick="GetInstanceAndCallMethod">Open</button>
+<button type="button" @onclick="CloseWindow">Close</button>
+@code{
+    public class JsRuntimeObjectRef : IAsyncDisposable
+    {
+        internal IJSRuntime JSRuntime { get; set; }
+
+        public JsRuntimeObjectRef()
+        {
+        }
+
+        [JsonPropertyName("__jsObjectRefId")]
+        public int JsObjectRefId { get; set; }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JSRuntime.InvokeVoidAsync("browserInterop.removeObjectRef", JsObjectRefId);
+        }
+    }
+    private JsRuntimeObjectRef _windowRef;
+    private async Task OpenWindow()
+    {
+        _windowRef = await jsRuntime.InvokeAsync<JsRuntimeObjectRef>("openWindow");
+        _windowRef.JSRuntime = jsRuntime;
+    }
+
+    private async Task CloseWindow()
+    {
+        await jsRuntime.InvokeVoidAsync("closeWindow", _windowRef);
+        await _windowRef.DisposeAsync();
+    }
+}
