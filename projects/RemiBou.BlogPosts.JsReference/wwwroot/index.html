@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>RemiBou.BlogPosts.JsReference</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+</head>
+
+<body>
+    <app>Loading...</app>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script type="text/javascript">
+        var jsObjectRefs = {};
+        var jsObjectRefId = 0;
+        const jsRefKey = '__jsObjectRefId';
+        DotNet.attachReviver(function (key, value) {
+            if (value &&
+                typeof value === 'object' &&
+                value.hasOwnProperty(jsRefKey) &&
+                typeof value[jsRefKey] === 'number') {
+
+                var id = value[jsRefKey];
+                if (!(id in jsObjectRefs)) {
+                    throw new Error("This JS object reference does not exists : " + id);
+                }
+                const instance = jsObjectRefs[id];
+                return instance;
+            } else {
+                return value;
+            }
+        });
+        function cleanObjectRef(id) {
+            delete jsObjectRefs[jsObjectRefId];
+        }
+        function storeObjectRef(obj) {
+            var id = jsObjectRefId++;
+            jsObjectRefs[id] = obj;
+            var jsRef = {};
+            jsRef[jsRefKey] = id;
+            return jsRef;
+        }
+        function openWindow() {
+            return storeObjectRef(window.open("/", "_blank"));
+        }
+        function closeWindow(window) {
+            window.close();
+        }
+        function getInstance() {
+            return {
+                method: function () {
+                    console.log('test');
+                }
+            };
+        }
+        function callInstanceMethod(instance) {
+            instance.method();
+        }   
+    </script>
+</body>
+
+</html>
