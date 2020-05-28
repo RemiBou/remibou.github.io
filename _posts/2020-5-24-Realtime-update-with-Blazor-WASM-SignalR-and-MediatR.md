@@ -1,14 +1,14 @@
 ---
 layout: post
 feature-img: "assets/img/pexels/circuit.jpeg"
-tags: [ASPNET Core, Blazor, JSInterop]
+tags: [ASPNET Core, Blazor, MediatR, SignalR]
 ---
 
 # How to have realtime update in your app with Blazor WASM, SignalR and MediatR
 
-On eof the big problem with web app is real time update : most of the traffic is from the client to the server, so the server cannot say anything to the client like "there is a new message for you". Fortunately, there is many technical solution for this : server-send events, long polling, web socket ... In the .net world we are very lucky because there is one project that help abstracting over which solution to choose (some of them are available only in some web browser) : SignalR.
+One of the big problem with web app is real time update : most of the traffic is from the client to the server, so the server cannot say anything to the client like "there is a new message for you". Fortunately, there is many technical solution for this : server-send events, long polling, web socket ... In the .net world we are very lucky because there is one project that helps abstracting over which solution to choose (some of them are available only in some web browser or only in some web server) : [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr).
 
-I will explain in this blog post how to implement live reloading of a Blazor WASM app with SignalR and MediatR (my other prefered OSS project).
+I will explain in this blog post how to implement live reloading of a Blazor WASM GUI with SignalR and MediatR (my other prefered OSS project).
 
 ## Setup
 
@@ -27,7 +27,7 @@ dotnet add Client package Microsoft.AspNetCore.SignalR.Client
 dotnet add MediatR
 ```
 
-And to the server
+And only MediatR to the server because SignalR is included by default (they change ASPNET dependencies every week maybe it's different in your country)
 ```sh
 dotnet add package MediatR
 ```
@@ -49,6 +49,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddControllersWithViews();
     services.AddRazorPages();
     services.AddSignalR();
+    services.AddMediatR(this.GetType().Assembly);
     services.AddResponseCompression(opts =>
     {
         opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -61,7 +62,6 @@ And add the  endpoint that wire incoming subscription to the hub we created
 ```cs
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapHub<NotificationHub>("/notifications");
@@ -69,7 +69,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 }
 ```
 
-Now I have a server-side MediatR notification that must trigger a client UI update
+Let's say I have this server-side MediatR notification :
 
 ```cs
 
@@ -101,11 +101,11 @@ You can trigger it with a curl call
 curl -X POST -d "" http://localhost:5000/home/increment
 ```
 
-## Sending notification from server to the client
+## Sending notifications from server to the client
 
-What I want to do is this : when some notification are send in MediatR, send them on the Hub. Then on the client receive those notification and pass them to the living component that subscribed to it.
+What I want to do is this : when some notifications are sent in MediatR: send them on the Hub. Then on the client receive those notification and pass them to the component that subscribed to it.
 
-First I need to send notification to the hub, so I change my hub like this
+First I need to send notifications to the hub, so I change my hub like this
 
 ```cs
 public class HubNotificationHandler : INotificationHandler<CounterIncremented>
@@ -188,7 +188,7 @@ public class NotificationJsonConverter : JsonConverter<SerializedNotification>
     }
 }
 ```
-- Again perf are not the best, the GetRawTextis not a good idea ad it can allocate a lot of memory. If you work at StackOverflow you'll find someone to help you about that.
+- Perf are not the best, the GetRawText(à is not a good idea ad it can allocate a lot of memory. If you work at StackOverflow you'll find someone to help you about that.
 - This converter is actually simple : it adds a field to the JSON with the child type and reads it when deserializaing. There isn't (AFAIK) any security issues because the child type list is finite and known by the developper.
 
 Here is how I wire my custom converter to SignalR protocol (in Startup.cs)
@@ -198,7 +198,7 @@ services.AddSignalR()
         .AddJsonProtocol(o => o.PayloadSerializerOptions.Converters.Add(new NotificationJsonConverter()));
 ```
 
-On the client side you need to listen to event. First because Microsoft DI doesn't support runtime configuration I can't use MediatR for sending the notification to the components.So I need to write some kind of service locator for finding the component that implements INotificationHandler do this I created this class
+On the client side you need to listen to event. Because Microsoft DI doesn't support runtime dynamic configuration (once you called app.Build() you can't change anything) I can't use MediatR for sending the notification to the components. So I need to write some kind of service locator for finding the components that implements INotificationHandler. To do this I created this class
 
 ```cs
 
@@ -318,9 +318,9 @@ await hubConnection.StartAsync();
 await app.RunAsync();
 ```
 
-- From the template you need to split the Build and RunAsync code so you get the service collection for your app.
+- From the template you need to split the Build and RunAsync call so you get the service collection for your app.
 
-Et voila ! Now when you launch the bash script the UI is updated automatically. Of course if you want to display the initial state you need to create an API that provides it.
+Et voila ! Now when you launch the bash script, the UI is updated automatically. Of course if you want to display the initial state you need to create an API that provides it.
 
 ## Conclusion
 Once again we saw the biggest selling point of Blazor : I can use the same toolbelt for the frontend and the backend (SignalR, MediatR, Json converters...) and it feels damn good :) You can now build a realtime app without a single line of javascript.
