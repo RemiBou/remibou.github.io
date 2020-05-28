@@ -1,0 +1,29 @@
+﻿@page "/"
+@using RemiBou.BlogPost.SignalR.Shared
+@using MediatR
+@implements INotificationHandler<CounterIncremented>
+@implements IDisposable
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+Current count : @count
+@code {
+    private int count;
+    protected override void OnInitialized()
+    {
+        DynamicNotificationHandlers.Register(this);
+    }
+    public async Task Handle(CounterIncremented notification, System.Threading.CancellationToken cancellationToken)
+    {
+        count = notification.Counter;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        DynamicNotificationHandlers.Unregister(this);
+
+    }
+}
