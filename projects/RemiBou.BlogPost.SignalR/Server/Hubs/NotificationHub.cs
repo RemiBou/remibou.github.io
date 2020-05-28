@@ -23,10 +23,12 @@ namespace RemiBou.BlogPost.SignalR.Server.Hubs
   
         public async Task Handle(CounterIncremented notification, CancellationToken cancellationToken)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions();
-            options.Converters.Add(new NotificationJsonConverter());
-            var json = JsonSerializer.Serialize(notification, options);
-            await _hubContext.Clients.All.SendAsync("Notification",notification);
+            await SendNotification(notification);
+        }
+
+        private async Task SendNotification(SerializedNotification notification)
+        {
+            await _hubContext.Clients.All.SendAsync("Notification", notification);
         }
     }
 }

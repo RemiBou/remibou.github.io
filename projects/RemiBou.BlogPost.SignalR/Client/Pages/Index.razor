@@ -1,14 +1,8 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.SignalR.Client
-@using Microsoft.Extensions.DependencyInjection
-@using Microsoft.Extensions.Logging
-@using System.Text.Json
 @using RemiBou.BlogPost.SignalR.Shared
 @using MediatR
-@using Blazor.Extensions.Logging
-@inject NavigationManager NavigationManager
 @implements INotificationHandler<CounterIncremented>
-    @implements IDisposable
+@implements IDisposable
 
 <h1>Hello, world!</h1>
 
@@ -19,19 +13,16 @@ Current count : @count
     private int count;
     protected override void OnInitialized()
     {
-        Console.WriteLine("Register");
         DynamicNotificationHandlers.Register(this);
     }
     public async Task Handle(CounterIncremented notification, System.Threading.CancellationToken cancellationToken)
     {
-        Console.WriteLine("Handle");
         count = notification.Counter;
         StateHasChanged();
     }
 
     public void Dispose()
     {
-        Console.WriteLine("Unregister");
         DynamicNotificationHandlers.Unregister(this);
 
     }
