@@ -8,7 +8,7 @@ tags: [Architecture, SOLID]
 _This article expose my opinion that I got from my own experience and taste please, do not feel offended if you do not agree with it. Off course I might be wrong, it happens everyday._
 
 ## What is SOLID ?
-[SOLID](https://en.wikipedia.org/wiki/SOLID#:~:text=In%20object%2Doriented%20computer%20programming,the%20GRASP%20software%20design%20principles.) are a set of principles for Object Oriented programing that are supposed to help you build great software. By great I mean maintainable, bug free, fast ... SOLID is an acronym where every letter is one rule. Let's go through them one by one.
+[SOLID](https://en.wikipedia.org/wiki/SOLID#:~:text=In%20object%2Doriented%20computer%20programming,the%20GRASP%20software%20design%20principles.) are a set of principles for Object Oriented programing that are supposed to help you build great software. By great I mean maintainable, bug free, fast ... SOLID is an acronym where every letter is one principle. From my experience, you shouldn't follow them blindly but think about it, understand it and find where the added value can be. In this article we'll go through these principles, I'll try to explain them and the added value I see.
 
 ### SRP
 SRP stands for Single Responsibility principle, the common explanation is "A class should have only one reason to change"... While it seems like a nice idea : a class with 2k lines is really hard to maintain, what does "one reason to change" mean ? Let's take this very simple class
@@ -80,11 +80,11 @@ When you create a library (public or internal to your large company) by definiti
 ## LSP
 LSP stands for "Liskov substitution principle", its usual explanation is "an object can be replaced by any instance of its subtype without altering the corectness of the program". This means that, from the example from before, we could use FooDivideBy2 or Foo everytime we need an IFoo and the program would still be correct. What I understand is that when you use an interface you shouldn't worry about the implementation that will be used.
 
-This principle is really nice and going against it adds "leaky abstraction". This is the case for the IQuryable interface in .NET : when you use it you have to know the implementation your are using because they don't all behave the same.
+This principle is really nice and going against it adds "leaky abstraction". This is the case for the IQueryable interface in .NET : when you use it you have to know the implementation your are using because they don't all behave the same.
 
 I see 2 problems with this principle :
-- Some interface/abstract class are used to provide a common entry point and the interface definition doens't say anything aobut the implementation like IObservable
-- Not all implementation of an interface shares the same edge cases and error. For instance this interface
+- Some interface/abstract class are used to provide a common entry point and the interface definition doesn't say anything about the what it should do, like IObservable
+- Not all implementation of an interface shares the same edge cases and error. For instance this interface :
 
 ```cs
 public class IDataSave{
