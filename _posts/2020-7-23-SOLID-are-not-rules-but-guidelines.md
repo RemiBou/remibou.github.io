@@ -24,9 +24,9 @@ It has many reason to change
 - We want to change the result , its value or even its type
 - We want a GetResults that would return the history of result
 
-And this is a class with 1 method with 1 line of code. In the SRP definition what bother me is the word "responsibility" its definition is really subjective and vaggue. I could have a single class of 100k lines of code whose responsibility is "provide online booking for hotel" and a class of 2 methods whose responsibilities are "return the price" and "save the price" and with these 2 responsibilities it wouldn't respect SRP. 
+And this is a class with 1 method with 1 line of code. In the SRP definition what bother me is the word "responsibility" its definition is really subjective and vague. I could have a single class of 100k lines of code whose responsibility is "provide online booking for hotel" and a class of 2 methods whose responsibilities are "return the price" and "save the price" and with these 2 responsibilities it wouldn't respect SRP. 
 
-The definition of this principle is so vague that it can't be called a principle. It's nearly impossible to explain it to someone, every time the auditor will say "what do you mean by 'responsibility' or 'reason to change' ?". If you are an extremist of this rule you might endup with thousand of very little classes and from my experience it's way worse to maintain than large ones. 
+The definition of this principle is so vague that it can't be called a principle. It's nearly impossible to explain it to someone, every time the auditor will say "what do you mean by 'responsibility' or 'reason to change' ?". If you are an extremist of this rule you might end up with thousand of very little classes and from my experience it's way worse to maintain than large ones. 
 
 __What should I keep from SRP ?__
 
@@ -78,7 +78,7 @@ __What should I keep from OCP ?__
 When you create a library (public or internal to your large company) by definition your class are closed : the user can't (easily) change their content. So you need to think about it and leave some extension hook so your user can customize your library. In other situation forget about it :)
 
 ## LSP
-LSP stands for "Liskov substitution principle", its usual explanation is "an object can be replaced by any instance of its subtype without altering the corectness of the program". This means that, from the example from before, we could use FooDivideBy2 or Foo everytime we need an IFoo and the program would still be correct. What I understand is that when you use an interface you shouldn't worry about the implementation that will be used.
+LSP stands for "Liskov substitution principle", its usual explanation is "an object can be replaced by any instance of its subtype without altering the correctness  of the program". This means that, from the example from before, we could use FooDivideBy2 or Foo everytime we need an IFoo and the program would still be correct. What I understand is that when you use an interface you shouldn't worry about the implementation that will be used.
 
 This principle is really nice and going against it adds "leaky abstraction". This is the case for the IQueryable interface in .NET : when you use it you have to know the implementation your are using because they don't all behave the same.
 
@@ -112,7 +112,7 @@ public interface IBookingManagement{
 
 You didn't need an interface in the first place ! Interface does not change anything to coupling or code quality, they reduce code readability. So if you want to use some, make sure they bring value. When is that ? I see 2 cases :
 
-- You have multiple implementations of this interface and the choosen implementation will change at runtime
+- You have multiple implementations of this interface and the chosen implementation will change at runtime
 - For testing purpose. I always put things that are out of my control behind an interface so I can mock/fake them for my tests : clock, random, external API, OS dependencies ...
 
 __What should I keep from ISP ?__
@@ -150,11 +150,11 @@ Here having an interface doesn't change anything to the coupling between Foo and
 
 __What should I keep from DIP ?__
 
-Design your modules so they don't know how its dependencies works appart from what is specified in the public method signature and documentation. 
+Design your modules so they don't know how its dependencies works apart from what is specified in the public method signature and documentation. 
 
 ## When you drink the SOLID kool-aid
 
-I will tell you a bit of my story and I think I'm not the only one with this kind of experience. I was tech lead / architect / mentor / ... at a small software editor (under 20 devs at that time) when I started to read about SOLID. And I got into it, I thought it was the answer to all our maintainance problem, spaghetti / lasagna / calzone code base, countless bug etc ... So I tried to teach it to the team and following the principles on my own work. But it didn't change anything :
+I will tell you a bit of my story and I think I'm not the only one with this kind of experience. I was tech lead / architect / mentor / ... at a small software editor (under 20 devs at that time) when I started to read about SOLID. And I got into it, I thought it was the answer to all our maintenance problem, spaghetti / lasagna / calzone code base, countless bug etc ... So I tried to teach it to the team and following the principles on my own work. But it didn't change anything :
 
   - My code was hard to read for the rest of the team
   - The rest of the team didn't understand a single thing about the rules and never tried to respect it. 
@@ -176,7 +176,7 @@ Now I will tell you about a few rules that I prefer to apply to my own work beca
 The law of Demeter is quite easy to explain : in a method Do in a class Foo you can only do the following :
 - change state of Foo (private fields)
 - call a method on any parameter of Do
-- call a method on any variable instanciated inside Do
+- call a method on any variable instantiated inside Do
 - call a method on any fields of Foo
 
 To apply this in C# it's quite easy : stop making properties setter public !
@@ -207,7 +207,7 @@ public class Bar{
     }
 }
 ```
-Like this your are doing beautiful OOP : each object is responsible for its state. Class are not only data holder, they also bring behavior. And you will see with time that it's easier to maintain as everything will be more explicit : in the first example the verb "Enable" was never written. Here it's a simple example, but having every state change expressed as a verb make thing clearer and more obvious.
+Like this you are doing beautiful OOP : each object is responsible for its state. Class are not only data holder, they also bring behavior. And you will see with time that it's easier to maintain as everything will be more explicit : in the first example the verb "Enable" was never written. Here it's a simple example, but having every state change expressed as a verb make thing clearer and more obvious.
 
 ### YAGNI
 
@@ -246,11 +246,11 @@ public class Foo{
 ``` 
 We don't need any documentation, the behavior is explicit, we'll integrate this method way faster than the previous one. 
 
-A good sign is indeed documentation : if you need to read a method documentation it might not be explicit enough. If you can't make it more explicit without impacting readbility (like changing to a 200 char long method name) then add comment.
+A good sign is indeed documentation : if you need to read a method documentation it might not be explicit enough. If you can't make it more explicit without impacting readability (like changing to a 200 char long method name) then add comment.
 
 ### KISS
 
-KISS stand for "Keep It Simple Stupid". It's not a rule and it's very subjective, so it's easy to have argument with a colleague about wether something is simple or not. But for me, KISS also means "Don't follow rules, follow the value", let's copy and example for a previous paragraph :
+KISS stand for "Keep It Simple Stupid". It's not a rule and it's very subjective, so it's easy to have argument with a colleague about whether something is simple or not. But for me, KISS also means "Don't follow rules, follow the value", let's copy and example for a previous paragraph :
 
 ```cs
 public class Foo{
@@ -274,18 +274,18 @@ public class Bar : IBar{
 ```
 
 What is the value of IBar if I have only one implementation ? None. But it costs a lot :
-- Every single time I will navigate between Foo and Bar, I will endup on the interface
+- Every single time I will navigate between Foo and Bar, I will end up on the interface
 - Every time I want to add a parameter to SaveData I will have to change the class and the interface
 - I will have to setup DI for injecting Bar
 ...
 
 If there is no added value, remove the superflux. If it's simple to insert data directly in your controller DO IT, ignore SOLID, ignore everything, do what seems to be simple.
 
-It's the same for layered architecture, for each layer you need to evaluate the cost in complexity against its added value. Don't add layer becausesomeone said so. 
+It's the same for layered architecture, for each layer you need to evaluate the cost in complexity against its added value. Don't add layer because someone said so. 
 
 ### Stop Renaming Shit (SRS, patent pending)
 
-This is a rule of mine : even if he first naming was shit, keep it or rename it everywhere. It's really hard to follow a code base and see a concept like "product model" becoming "product type" on a layer which then becomes "item kind" on the next layer and then ends up "buyable thing category". Every developer has an opinion on how to name thing, don't be presemptous, you are not better than your colleague, keep its choice it'll be better for both of you.
+This is a rule of mine : even if he first naming was shit, keep it or rename it everywhere. It's really hard to follow a code base and see a concept like "product model" becoming "product type" on a layer which then becomes "item kind" on the next layer and then ends up "buyable thing category". Every developer has an opinion on how to name thing, don't be presumptuous, you are not better than your colleague, keep its choice it'll be better for both of you.
 
 ## Conclusion
 
