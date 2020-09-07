@@ -4,7 +4,7 @@ layout: post
 
 feature-img: "assets/img/pexels/circuit.jpeg"
 
-tags: [ASPNET Core, Blazor, MediatR, SignalR]
+tags: [ASPNET Core, Blazor, BrowserInterop]
 
 ---
 
