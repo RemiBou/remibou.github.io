@@ -265,7 +265,7 @@ public static class DynamicNotificationHandlers
 
 Now to register to this my component needs to do this (in Index.razor for example) :
 
-```razor
+```cs
 @page "/"
 @using RemiBou.BlogPost.SignalR.Shared
 @using MediatR

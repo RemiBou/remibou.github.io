@@ -76,7 +76,7 @@ Now in one of your page, you need the current IJSRuntime :
 
 
 
-```razor
+```cs
 
 @inject IJSRuntime jsRuntime
 
@@ -88,7 +88,7 @@ Add a reference to the BrowserInterop namespace that provides the needed methods
 
 
 
-```razor
+```cs
 
 @using BrowserInterop.Extensions
 
@@ -102,7 +102,7 @@ Now get the Geolocation API wrapper :
 
 
 
-```razor
+```cs
 
 @code{
 
@@ -136,7 +136,7 @@ Now you can get the current position with this
 
 
 
-```razor
+```cs
 
 <button type="button" @onclick="GetGeolocation">Get Current Position</button>
 
@@ -216,7 +216,7 @@ Browser also provides an API for watching GPS position change for mobile users. 
 
 
 
-```razor
+```cs
 
 WatchPosition">Watch position
 
@@ -274,7 +274,7 @@ First, add the @implements clause on the top of your razor file :
 
 
 
-```razor
+```cs
 
 @implements IAsyncDisposable
 
@@ -286,7 +286,7 @@ Then you can add a button for stopping the watcher and dispose it :
 
 
 
-```razor
+```cs
 
 <button type="button" @onclick="StopWatch">Stop watch</button>
 

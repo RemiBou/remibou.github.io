@@ -194,7 +194,7 @@ For instance here is my appsettings.Development.json
 ## Usage
 For using it, you simply need to inject IConfiguration where you need it
 
-```razor
+```cs
 @inject Microsoft.Extensions.Configuration.IConfiguration configuration
 <h1>@configuration["title"]</h1>
 ```

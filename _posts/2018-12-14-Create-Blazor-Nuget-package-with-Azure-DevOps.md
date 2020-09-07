@@ -106,13 +106,13 @@ dotnet add package RemiBou.Blazor.DataAnnotation --version 0.0.0-CI-20181214-215
 
 And on your project's _ViewImport.cshtml you add
 
-```razor
+```cs
 @addTagHelper *, RemiBou.Blazor.DataAnnotation
 ```
 
 So now you can use thepackage content like this
 
-```razor
+```cs
     <ValidatedForm OnSubmit="SubmitForm" Model="validatedInstance">
         <input type="text" bind="@validatedInstance.ValidatedField" /><br />
         <ValidationErrorLabel Model="validatedInstance" FieldName="ValidatedField" /><br />
