@@ -1,0 +1,83 @@
+﻿@page "/"
+@using BrowserInterop.Extensions
+@using BrowserInterop.Geolocation
+@inject IJSRuntime jsRuntime
+@implements IAsyncDisposable
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<button type="button" @onclick="GetGeolocation">Get Current Position</button>
+<button type="button" @onclick="WatchPosition">Watch position</button>
+<button type="button" @onclick="StopWatch">Stop watch</button>
+
+@if(currentPosition != null){
+    <div>Current position : 
+        <ul>
+            <li>Latitude : @currentPosition.Coords.Latitude </li>
+            <li>Longitude : @currentPosition.Coords.Longitude </li>
+            <li>Altitude : @currentPosition.Coords.Altitude </li>
+            <li>Accuracy : @currentPosition.Coords.Accuracy </li>
+            <li>Altitude Accuracy : @currentPosition.Coords.AltitudeAccuracy </li>
+            <li>Heading : @currentPosition.Coords.Heading </li>
+            <li>Speed : @currentPosition.Coords.Speed </li>
+        </ul>
+    </div>
+}
+
+Position History :
+@foreach (var item in positioHistory)
+{
+     <div> -----
+        <ul>
+            <li>Latitude : @item.Coords.Latitude </li>
+            <li>Longitude : @item.Coords.Longitude </li>
+            <li>Altitude : @item.Coords.Altitude </li>
+            <li>Accuracy : @item.Coords.Accuracy </li>
+            <li>Altitude Accuracy : @item.Coords.AltitudeAccuracy </li>
+            <li>Heading : @item.Coords.Heading </li>
+            <li>Speed : @item.Coords.Speed </li>
+        </ul>
+    </div>
+}
+
+@code{
+    private WindowNavigatorGeolocation geolocationWrapper;
+    private GeolocationPosition currentPosition;
+    private List<GeolocationPosition> positioHistory = new List<GeolocationPosition>();
+    private IAsyncDisposable geopositionWatcher;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var window = await jsRuntime.Window();
+        var navigator = await window.Navigator();
+        geolocationWrapper = navigator.Geolocation;
+    }
+
+     public async Task GetGeolocation()
+    {
+        currentPosition = (await geolocationWrapper.GetCurrentPosition(new PositionOptions()
+        {
+            EnableHighAccuracy = true,
+            MaximumAgeTimeSpan = TimeSpan.FromHours(1),
+            TimeoutTimeSpan = TimeSpan.FromMinutes(1)
+        })).Location;
+    }
+
+    public async Task WatchPosition(){
+        geopositionWatcher = await geolocationWrapper.WatchPosition(async (p) =>
+        {
+            positioHistory.Add(p.Location);
+            StateHasChanged();
+        }
+        );
+    }
+
+    public async Task StopWatch(){
+        await geopositionWatcher.DisposeAsync();
+        geopositionWatcher = null;
+    }
+
+    public async ValueTask DisposeAsync(){
+        await StopWatch();
+    }
+}
