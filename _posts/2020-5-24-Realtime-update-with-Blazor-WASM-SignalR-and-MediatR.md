@@ -325,7 +325,7 @@ Et voila ! Now when you launch the bash script, the UI is updated automatically.
 ## Conclusion
 Once again we saw the biggest selling point of Blazor : I can use the same toolbelt for the frontend and the backend (SignalR, MediatR, Json converters...) and it feels damn good :) You can now build a realtime app without a single line of javascript.
 
-All the source code for this blog post is available here : [(https://github.com/RemiBou/remibou.github.io/tree/master/projects/RemiBou.BlogPosts.SignalR]((https://github.com/RemiBou/remibou.github.io/tree/master/projects/RemiBou.BlogPosts.SignalR)
+All the source code for this blog post is available here : [(https://github.com/RemiBou/remibou.github.io/tree/master/projects/RemiBou.BlogPost.SignalR]((https://github.com/RemiBou/remibou.github.io/tree/master/projects/RemiBou.BlogPost.SignalR)
 
 
 
